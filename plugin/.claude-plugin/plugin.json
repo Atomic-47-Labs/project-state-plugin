@@ -1,0 +1,27 @@
+{
+  "name": "project-state",
+  "displayName": "Project State",
+  "version": "4.2.0",
+  "description": "Turn any multi-stakeholder project into a system where routine reporting is a byproduct of normal work. 34 skills for milestones, objectives/KPIs, phase gates, document curation, status reports, funder/grant compliance, and a local kanban — driven by swappable compliance packs (PIC, SR&ED, grant-Canada, board/investor, client-services, agile, open-source).",
+  "author": {
+    "name": "Atomic 47 Labs",
+    "url": "https://atomic47.co"
+  },
+  "homepage": "https://github.com/Atomic-47-Labs/project-state-plugin",
+  "repository": "https://github.com/Atomic-47-Labs/project-state-plugin",
+  "license": "MIT",
+  "keywords": [
+    "project-management",
+    "milestones",
+    "objectives",
+    "kpis",
+    "okr",
+    "reporting",
+    "compliance",
+    "grant-management",
+    "sred",
+    "scaffolding",
+    "jira",
+    "project-state"
+  ]
+}

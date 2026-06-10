@@ -1,0 +1,79 @@
+# PIC PCAIS — review-meeting profile
+# Loaded by: project-review-meeting skill
+# Purpose: reproduce v1.x project-sc-meeting behavior
+
+profile_id: pic-pcais.review-meeting
+
+meeting:
+  name: "Steering Committee"
+  short_id_prefix: "SC"
+  cadence:
+    kind: quarterly
+    minimum: true   # MPA minimum; can be more frequent
+    alignment: "first-month-of-quarter"
+  notice_minimum_days: 5      # business days, per MPA
+  lookahead_months: 3         # schedule 3 months ahead
+  minutes_distribution_max_days: 5   # business days post-meeting, per MPA
+  duration_minutes: 90
+
+attendees:
+  designate_roles_per_member:
+    - id: project_lead
+      required: true
+      voting: true
+    - id: finance_representative
+      required: true
+      voting: true
+    - id: communications_representative
+      required: true
+      voting: true
+    - id: signing_authority
+      required: true
+      voting: true
+  funder_attendees:
+    - id: pic_pm
+      required: false
+      voting: false
+      role_label: "PIC Project Manager (non-voting)"
+
+agenda:
+  template: "templates/sc-agenda-appendix-a.md"
+  source: "PIC PM Guide Appendix A"
+  required_sections:
+    - "Approval of previous minutes"
+    - "Project status and milestone progress"
+    - "Financial status and quarterly claim review"
+    - "Risk register review"
+    - "Change log and any change orders"
+    - "IP disclosures since last SC"
+    - "Publications and external comms in pipeline"
+    - "Open discussion (incl. lessons learned)"
+    - "Action items + next meeting date"
+
+preread_pack:
+  assembly:
+    - status-reporter.weekly
+    - status-reporter.dashboard-snapshot
+    - milestone-manager.at-risk
+    - milestone-manager.recent-completions
+    - risks.recently-changed
+    - decisions.recently-recorded
+    - changes.pending-orders
+    - ip.disclosures-since-last-sc
+    - publications.in-pipeline
+  output: "reports/sc-meetings/{sc-id}-preread-pack.docx"
+  distribution_lead_days: 5   # delivered 5 business days before meeting
+
+minutes:
+  capture: "manual or transcript-fed"
+  template: "templates/sc-minutes.md"
+  filing: "sc-meetings/{sc-id}-minutes.md"
+  distribution:
+    surface: gmail.draft
+    to: "all SC designates + PIC PM"
+    deadline: "5 business days post-meeting"
+  action_items:
+    file_as: "tasks"
+    owner_required: true
+    due_date_required: true
+    link_to_meeting: true

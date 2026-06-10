@@ -1,0 +1,22 @@
+pack:
+  id: "board-investor"
+  name: "Board / Investor Reporting"
+  version: "0.1.0-starter"
+  compatible_core: ">=2.0,<3.0"
+  description: |
+    Pack for PE/VC-backed startup projects. Configures the suite to handle board
+    meetings, monthly investor updates, KPI dashboard reporting, board pack
+    assembly. Pairs naturally with another funder/customer pack.
+  authors:
+    - "David Olsson <david@atomic47.co>"
+  released: "2026-04-27"
+  maturity: "starter"
+
+provides:
+  profiles:
+    - review-meeting
+    - funder-reporting
+  templates:
+    - board-pack.md
+    - monthly-investor-update.md
+  reporting_matrix_defaults: true

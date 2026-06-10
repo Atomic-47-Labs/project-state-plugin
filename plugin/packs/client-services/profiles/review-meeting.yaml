@@ -1,0 +1,52 @@
+# Client Services — review-meeting profile (QBR)
+
+profile_id: client-services.review-meeting
+
+meeting:
+  name: "Quarterly Business Review"
+  short_id_prefix: "QBR"
+  cadence:
+    kind: quarterly
+    alignment: "month-after-quarter-end"
+  notice_minimum_days: 10
+  lookahead_months: 6
+  minutes_distribution_max_days: 5
+  duration_minutes: 60
+
+attendees:
+  customer_attendees:
+    - id: customer_engagement_lead
+      required: true
+    - id: customer_executive_sponsor
+      required: false
+    - id: customer_technical_lead
+      required: false
+  internal_attendees:
+    - id: project_lead
+      required: true
+    - id: technical_lead
+      required: true
+    - id: account_executive
+      required: false
+
+agenda:
+  template: "templates/qbr-pack.md"
+  required_sections:
+    - "Engagement status against SOW"
+    - "Milestone progress and upcoming deliverables"
+    - "Financial summary (invoiced, outstanding, forecast)"
+    - "Risks and mitigation"
+    - "Customer satisfaction check + feedback"
+    - "Roadmap discussion (next quarter)"
+    - "Open discussion / strategic items"
+    - "Action items + next QBR date"
+
+preread_pack:
+  assembly:
+    - status-reporter.engagement-snapshot
+    - milestone-manager.completed-this-quarter
+    - milestone-manager.next-quarter-plan
+    - finance.invoiced-vs-budget
+    - risks.customer-facing
+  output: "reports/customer.{customer_id}/qbrs/{qbr-id}-pack.docx"
+  distribution_lead_days: 5

@@ -1,0 +1,143 @@
+# ============================================================================
+# PROJECT MANIFEST TEMPLATE — v2.0
+#
+# This is the v2.0 schema. Compared to v1.x:
+#   - Generic project identity at the top.
+#   - Stakeholders are first-class (not consortium-specific).
+#   - Funder/customer fields live in their own namespaces (loaded per-pack).
+#   - phases.preset selects the lifecycle preset; pack profiles can augment.
+#   - reporting_matrix_path points to the new stakeholder reporting matrix.
+#   - packs_loaded controls which compliance packs are active.
+#
+# Copy to project-state/manifest.yaml and fill in placeholders.
+# ============================================================================
+
+schema_version: 2
+manifest_kind: project
+
+project:
+  name: "TODO-ProjectName"               # short identifier, e.g., "Ai26.10"
+  long_name: "TODO-LongProjectTitle"
+  one_liner: |
+    TODO — one-paragraph description of what the project does and why.
+  kind: "TODO-project-kind"              # generic | grant_consortium | client_engagement | startup | open_source | mixed
+  start_date: ~                          # YYYY-MM-DD
+  end_date: ~                            # YYYY-MM-DD
+  packs_loaded: []                       # e.g. ["pic-pcais"], ["client-services", "board-investor"], ["agile-default"]
+  reporting_matrix_path: "reporting-matrix.yaml"
+
+# ----------------------------------------------------------------------------
+# Stakeholders — first-class in v2.0
+#
+# Every external-facing party that needs reports, gets routed work, or attends
+# meetings. Use stable IDs; the reporting matrix references these.
+# ----------------------------------------------------------------------------
+
+stakeholders:
+  - id: internal.team
+    organization: "TODO-Lead-Org"
+    role: "Project Team"
+  # Add per-pack stakeholders below; comment out what you don't need.
+  # - id: funder.pic
+  #   organization: "Protein Industries Canada"
+  #   role: "Funder"
+  #   contacts:
+  #     pm: ~
+  #     financial_analyst: ~
+  #     director_ip: ~
+  # - id: customer.{customer_id}
+  #   organization: "TODO-Customer-Name"
+  #   role: "Customer"
+  #   contacts:
+  #     billing: ~
+  #     engagement_lead: ~
+  # - id: board
+  #   organization: "TODO-Company-Board"
+  #   role: "Board"
+  # - id: investors
+  #   organization: "TODO-Investor-List"
+  #   role: "Investors"
+
+# ----------------------------------------------------------------------------
+# Phases — preset-driven in v2.0
+# ----------------------------------------------------------------------------
+
+phases:
+  preset: "TODO-preset"                  # grant-default | agile-default | waterfall-default | client-engagement-default | open-source-default | custom
+  custom_path: ~                         # if preset == "custom", path to your custom preset yaml
+  current_phase: ~                       # set by project-phase-gate
+
+# ----------------------------------------------------------------------------
+# Surfaces — last-mile delivery channels (unchanged from v1.1)
+# ----------------------------------------------------------------------------
+
+surfaces:
+  slack:
+    enabled: true
+    channels:
+      daily_standup: ~
+      weekly_report: ~
+      alerts: ~
+      deploys: ~
+  gmail:
+    enabled: true
+    from_identity: "TODO@email"
+    always_draft: true                   # CRITICAL: never auto-send
+  google_calendar:
+    enabled: true
+    calendar_id: "primary"
+  blog:
+    enabled: false
+    site_slug: ~
+    publication_review_required: true
+  website:
+    enabled: false
+    framework: "nextjs"
+    hosting: "vercel"
+    production_url: ~
+    auto_deploy_on_publish: true
+    require_review_for_public: true
+    default_visibility: "consortium"
+
+# ----------------------------------------------------------------------------
+# Funder / customer namespaces — populated by loaded packs
+# ----------------------------------------------------------------------------
+
+# Examples — uncomment the namespace for each pack you load.
+#
+# funder:
+#   pic:
+#     project_number: "Ai26.10"
+#     program: "PCAIS"
+#     governing_document: "Master Project Agreement (MPA)"
+#     schedule_a_workbook: "TODO-path/to/workbook.xlsx"
+#     contacts:
+#       pm: ~
+#       financial_analyst: ~
+#       director_ip: ~
+#
+# customer:
+#   "{customer_id}":
+#     contract_value_cad: 0
+#     start_date: ~
+#     end_date: ~
+#     sow_path: "TODO-path/to/sow.docx"
+#     contacts:
+#       billing: ~
+#       engagement_lead: ~
+
+# ----------------------------------------------------------------------------
+# Concurrency model (unchanged from v1.x)
+# ----------------------------------------------------------------------------
+
+concurrency:
+  model: "shared-drive"
+  write_rules: "file-per-entity, frontmatter timestamps, advisory lockfiles, append-only logs"
+  lock_ttl_seconds: 300
+
+meta:
+  schema_version: 2
+  created: ~
+  created_by: "TODO@email"
+  last_modified: ~
+  last_modified_by: ~

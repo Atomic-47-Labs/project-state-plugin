@@ -1,0 +1,39 @@
+profile_id: board-investor.funder-reporting
+stakeholder_group: investors
+
+reports:
+  - id: monthly-investor-update
+    name: "Monthly Investor Update"
+    description: |
+      Single email with the standard format: highlights / lowlights / metrics / asks.
+      Goes to the full investor mailing list.
+    cadence:
+      kind: monthly
+      day_of_month: "first-friday"
+      lead_time_days: 3
+    format:
+      kind: md
+      template: "templates/monthly-investor-update.md"
+      output_naming: "reports/investors/{YYYY}-{MM}-investor-update.md"
+    field_mapping:
+      highlights:
+        source: "reports/weekly/*.md"
+        extract: "wins"
+        from_period: "previous month"
+      lowlights:
+        source: "reports/weekly/*.md"
+        extract: "blockers + risks"
+        from_period: "previous month"
+      metrics:
+        source: "kpis/*.yaml"        # the substrate KPI entities (kind: kpi) — see docs/SCHEMA.md
+        select: "delivers_to in objectives where horizon in [annual, north-star]"
+        format: "{metric}: {current}{unit} (target {target}; {delta} since previous month)"
+      asks:
+        source: "asks-of-network.yaml"
+        manual_override: true   # CEO usually wants to write these directly
+    cover_delivery:
+      surface: gmail.draft
+      to: "{investors.mailing-list}"
+      subject: "{company} — {month} {year} Update"
+    signoff_required:
+      - role: ceo

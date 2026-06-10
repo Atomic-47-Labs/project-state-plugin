@@ -1,0 +1,120 @@
+# grant-canada — funder-reporting profile
+# Loaded by: project-funder-reporting skill
+# Generic Canadian grant reporting; customize funder-specific fields in
+# manifest.yaml:funder block after scaffolding.
+
+profile_id: grant-canada.funder-reporting
+
+# The funder block in manifest.yaml should declare:
+#   funder:
+#     id: nserc-alliance | irap | pic | sif | cfi-jelf | mitacs | ngen |
+#         scale-ai | genome-canada | pacifican | feddev | fednor | ced |
+#         acoa | cannor | sred | generic
+#     program: <specific program name>
+#     contacts: { pm: <email>, financial_analyst: <email> }
+#     claim_cadence: quarterly | semi-annual | annual | milestone-based
+#     claim_due_dates: [...] # ISO date strings or "04-20, 07-20, ..." patterns
+#     progress_report_cadence: annual | semi-annual
+#     final_report_due: "N days after project end"
+#     holdback_pct: 10   # percentage withheld until final report accepted
+#     data_retention_years: 6   # Tri-Agency default
+
+reports:
+  - id: progress-report
+    name: "Grant Progress Report"
+    description: |
+      Narrative and financial progress report to the funder. Populated from
+      milestone state, technical_progress fields, and financial summaries.
+      The specific template, cadence, and required sections vary by program;
+      this is the generic base — override in a program-specific profile
+      (e.g., pic-pcais.funder-reporting).
+    cadence:
+      kind: "{{manifest.funder.progress_report_cadence | default: 'annual'}}"
+      lead_time_days: 21
+    format:
+      kind: pdf
+      template: "templates/grant-progress-report.md"
+      output_naming: "reports/funder/{{YYYY}}-{{period}}-progress-report.pdf"
+    sections:
+      - id: executive-summary
+        source: generated
+        prompt: "Summarize project progress in 200 words"
+      - id: milestone-status
+        source: "milestones/*.yaml"
+        fields: [id, title, percent_complete, technical_progress, status]
+      - id: financial-summary
+        source: manual
+        note: "Finance Rep provides actuals; skill inserts placeholders"
+      - id: risks-and-mitigation
+        source: "risks/*.yaml"
+        filter: "status in [open, at_risk]"
+      - id: upcoming-period-plan
+        source: generated
+        prompt: "Based on incomplete milestones, describe the plan for the next period"
+    cover_delivery:
+      surface: gmail.draft
+      to: "{{manifest.funder.contacts.pm}}"
+      subject: "{{manifest.project.name}} — {{period}} Progress Report"
+    signoff_required:
+      - role: project_lead
+      - role: finance_representative
+    submission: manual
+
+  - id: quarterly-claim
+    name: "Quarterly Claim"
+    description: |
+      Quarterly financial claim. Applies to IRAP, PIC, SIF, and similar
+      programs with quarterly disbursement cycles. Skip for Tri-Agency
+      (use annual progress-report instead).
+    cadence:
+      kind: quarterly
+      due_days_of_year:
+        "{{manifest.funder.claim_due_dates | default: ['04-20','07-20','10-20','01-20']}}"
+      lead_time_days: 14
+    format:
+      kind: xlsx
+      template: "templates/quarterly-claim.xlsx"
+      output_naming: "reports/claims/{{YYYY}}-Q{{Q}}-claim.xlsx"
+    cover_delivery:
+      surface: gmail.draft
+      to: "{{manifest.funder.contacts.pm}}"
+      cc: ["{{manifest.funder.contacts.financial_analyst}}"]
+      subject: "{{manifest.project.name}} — Q{{Q}} {{YYYY}} Claim"
+    signoff_required:
+      - role: project_lead
+      - role: finance_representative
+    submission: manual
+
+  - id: final-report
+    name: "Final Technical Report"
+    description: |
+      Comprehensive end-of-project report. Due within the window specified
+      in the funding agreement (typically 30–90 days post-project-end).
+      Triggers holdback release tracking.
+    cadence:
+      kind: once
+      trigger: phase.closeout
+    format:
+      kind: pdf
+      template: "templates/grant-final-report.md"
+      output_naming: "reports/funder/final-report-{{YYYY}}.pdf"
+    signoff_required:
+      - role: project_lead
+      - role: finance_representative
+      - role: tto    # IP clearance before final report submission
+    holdback_tracking: true
+    submission: manual
+
+program_notes:
+  tri-agency:
+    cadence_override: annual
+    data_retention_years: 6
+    bilingual_required: true
+    note: "NSERC/SSHRC/CIHR use Research Portal for submission; skill generates draft only"
+  irap:
+    cadence_override: quarterly
+    milestone_based_disbursement: true
+    note: "IRAP claims are milestone-triggered; align claim dates to milestone completions"
+  sred:
+    cadence_override: annual
+    note: "SR&ED claims filed via T661 (CRA); use sred-canada pack for dedicated skill"

@@ -1,0 +1,28 @@
+preset_id: waterfall-default
+description: |
+  Traditional waterfall lifecycle.
+
+phases:
+  - id: "01-requirements"
+    label: "Requirements"
+    gate_out: "Requirements signed off"
+  - id: "02-design"
+    label: "Design"
+    gate_in: "Requirements signed off"
+    gate_out: "Design reviewed and approved"
+  - id: "03-build"
+    label: "Build"
+    gate_in: "Design approved"
+    gate_out: "Build complete; ready for test"
+  - id: "04-test"
+    label: "Test"
+    gate_in: "Build complete"
+    gate_out: "Test pass; UAT signed off"
+  - id: "05-deploy"
+    label: "Deploy"
+    gate_in: "UAT signed off"
+    gate_out: "Deployed to production; cutover complete"
+  - id: "06-maintain"
+    label: "Maintain"
+    gate_in: "Deployed to production"
+    gate_out: ~

@@ -1,0 +1,32 @@
+pack:
+  id: "client-services"
+  name: "Client Services Engagement"
+  version: "0.1.0-starter"
+  compatible_core: ">=2.0,<3.0"
+  description: |
+    Pack for consulting/client-engagement projects. Configures the suite to handle
+    Statements of Work, milestone-based customer billing, customer change orders
+    against contract scope, customer-facing QBRs, customer signoff gates on
+    deliverables, monthly invoicing cadence, post-engagement support windows.
+  authors:
+    - "David Olsson <david@atomic47.co>"
+  released: "2026-04-27"
+  maturity: "starter — proven shape, adapt to your client contract"
+
+provides:
+  profiles:
+    - funder-reporting   # customer plays the funder role here
+    - review-meeting     # QBR
+    - external-comms     # customer-confidentiality review
+    - archive            # engagement wrap
+  templates:
+    - invoice-cover-email.md
+    - qbr-pack.md
+    - engagement-final-deliverable.md
+  reporting_matrix_defaults: true
+
+depends_on:
+  packs: []
+
+conflicts_with:
+  packs: []   # coexists with PIC pack (a project can have a funder + a customer)

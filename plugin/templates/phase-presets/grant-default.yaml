@@ -1,0 +1,59 @@
+# Grant-default phase preset
+# Reproduces the v1.x six-phase lifecycle. Used by PIC, NSERC, NIH, EU Horizon, etc.
+
+preset_id: grant-default
+description: |
+  Standard grant-funded project lifecycle: LOI → Approval → Planning → Execution → Closeout → Archive.
+  Pack profiles can augment gate-in / gate-out criteria with funder-specific requirements.
+
+phases:
+  - id: "01-loi"
+    label: "Letter of Intent"
+    gate_in: ~
+    gate_out: "LOI accepted by funder"
+    status: "complete"   # adjust per project history
+
+  - id: "02-approval"
+    label: "Submission & Approval"
+    gate_in: "LOI accepted"
+    gate_out: "Proposal approved by funder"
+    status: "complete"
+
+  - id: "03-planning"
+    label: "Planning (Agreement → Kickoff)"
+    gate_in: "Proposal approved"
+    gate_out: "First Steering/Review meeting held; SOPs established"
+    status: "current"
+    required_artifacts:
+      - "Signed governing agreement (all parties)"
+      - "Steering/Review committee designates form"
+      - "Kickoff communications plan"
+      - "Initial project risk register"
+      - "Milestone-to-task decomposition for first quarter"
+
+  - id: "04-execution"
+    label: "Execution (Active Work)"
+    gate_in: "Kickoff meeting complete"
+    gate_out: "All milestones complete OR project end date reached"
+    status: "pending"
+    required_recurring:
+      - "Recurring Steering/Review meetings + minutes distributed"
+      - "Periodic funder reports (claim, invoice, board pack — whichever applies)"
+      - "Ongoing change log entries; change orders as material changes arise"
+      - "Annual project assessment(s)"
+
+  - id: "05-closeout"
+    label: "Closeout & Final Reporting"
+    gate_in: "Project end date reached"
+    gate_out: "Final reports accepted; engagement closed"
+    status: "pending"
+    required_artifacts:
+      - "Final report per funder/customer template"
+      - "Final financial reconciliation"
+      - "Lessons Learned summary"
+
+  - id: "06-archive"
+    label: "Archive"
+    gate_in: "Closeout accepted"
+    gate_out: ~
+    status: "pending"

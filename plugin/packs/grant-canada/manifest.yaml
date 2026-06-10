@@ -1,0 +1,65 @@
+# Pack: grant-canada — Canadian Grant Submission Lifecycle
+#
+# Adds pre-award grant submission facilities (grant-state/) to project-state.
+# Covers 19 Canadian programs. On award, freezes submission and spawns a
+# sibling project-state/ carrying forward people, IP, gates, and milestones.
+#
+# Compatible cores: 3.0+
+# Pack version: 1.0.0
+
+pack:
+  id: "grant-canada"
+  name: "Canadian Grant Submission"
+  version: "1.0.0"
+  compatible_core: ">=3.0"
+  description: |
+    Canadian grant submission lifecycle for project-state. Adds a pre-award
+    grant-state/ facility kind and three skills (grant-state, grant-scaffolder,
+    grant-ingestor) covering 19 major Canadian programs: Tri-Council
+    (NSERC/SSHRC/CIHR), IRAP, SIF, PIC, CFI JELF, Mitacs Accelerate,
+    NGen, SCALE.AI, Genome Canada, regional development agencies (PacifiCan,
+    FedDev, FedNor, CED, ACOA, CanNor), SR&ED, and an agnostic-core fallback.
+
+    Models 12 Canada-specific compliance gates (OCAP, GBA+, bilingual, TTO
+    routing, stacking, IP declaration, Indigenous engagement, environmental,
+    cost-share, ethics-REB, biosafety, data sovereignty) as first-class
+    facility entities.
+
+    On award: freezes the grant facility, spawns a sibling project-state/,
+    and carries forward consortium people, IP rationale, gate snapshots,
+    research facility, and re-baselined milestones.
+  authors:
+    - "David Olsson <david@atomic47.co>"
+  governing_documents:
+    - "Tri-Agency Guide on Financial Administration"
+    - "NSERC Alliance Program Guide"
+    - "IRAP Technical Review Guide"
+    - "PIC PM Guide"
+  released: "2026-05-18"
+
+provides:
+  facility_kinds:
+    - grant-submission
+  skill_namespaces:
+    - grant-*
+  profiles:
+    - phase-gate
+    - review-meeting
+    - funder-reporting
+    - external-comms
+  templates:
+    - grant-manifest.yaml
+    - compliance-gates-canada.yaml
+    - submission-phases/00-prospect.yaml
+    - submission-phases/01-pre-submission.yaml
+    - submission-phases/02-internal-review.yaml
+    - submission-phases/03-submitted.yaml
+    - submission-phases/04-awarded.yaml
+    - submission-phases/05-rejected.yaml
+  reporting_matrix_defaults: true
+
+depends_on:
+  packs: []     # standalone; compatible with sred-canada (complementary)
+
+conflicts_with:
+  packs: []

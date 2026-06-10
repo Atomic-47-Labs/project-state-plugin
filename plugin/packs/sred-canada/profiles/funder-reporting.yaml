@@ -1,0 +1,109 @@
+# sred-canada — funder-reporting profile
+# Configures project-funder-reporting for the CRA SR&ED T661 annual claim cycle.
+# "Funder" here = CRA (tax authority). The claim is a T2 amendment, not a grant report.
+
+profile_for: "project-funder-reporting"
+pack: "sred-canada"
+
+report_identity:
+  label: "SR&ED T661 Claim"
+  stakeholder_id: "tax.cra"
+  form_reference: "T661 SR&ED Expenditures Claim (CRA)"
+
+cadence:
+  frequency: "annual"
+  trigger: "fiscal_year_end"
+  hard_deadline_months_after_fy_end: 18    # CRA hard deadline — missing it loses the claim
+  target_months_after_fy_end: 15           # 3-month buffer for review + advisor
+  quarterly_log_review: true               # Intermediate: quarterly evidence log reviews
+
+outputs:
+  - id: "t661-narrative"
+    format: "md"
+    template: "t661-narrative.md"
+    sections:
+      - id: "project-summary"
+        label: "Project Summary"
+        source: "manifest.yaml + sred/state.json"
+        fields:
+          - project_code               # e.g., AIMQC-CORE-2025
+          - project_title              # short title for T661
+          - field_of_science           # CRA code (e.g., 2.02.09 Software engineering)
+          - start_date
+          - end_date
+          - claimant_org
+          - claimant_bn                # Business Number (BN) — from manifest
+      - id: "section-e"
+        label: "Section E — Technological Uncertainties [242]"
+        source: "sred/uncertainties/*.yaml"
+        sort: "by TU-NN id"
+        per_entry:
+          - uncertainty_statement      # "It was uncertain whether..."
+          - standard_practice_gap      # why existing tools/knowledge didn't apply
+          - linked_experiments         # TU → EX cross-reference
+      - id: "section-f"
+        label: "Section F — Work Performed [244]"
+        source: "sred/experiments/*.yaml"
+        sort: "by EX-NN id, grouped by linked TU"
+        per_entry:
+          - hypothesis
+          - method_and_trials
+          - observations_and_results   # including failures and iterations
+          - linked_tu
+          - linked_advancements
+      - id: "section-g"
+        label: "Section G — Technological Advancements [246]"
+        source: "sred/advancements/*.yaml"
+        sort: "by ADV-NN id"
+        per_entry:
+          - advancement_statement      # "The work established that..."
+          - knowledge_gained
+          - linked_tu
+          - linked_experiment
+
+  - id: "evidence-map"
+    format: "md"
+    template: "evidence-map.md"
+    source: "sred/evidence-log.ndjson + sred/uncertainties/ + sred/experiments/"
+    columns: [tu_id, experiment_id, evidence_description, date, people, record_reference]
+
+  - id: "cost-categorization"
+    format: "yaml"
+    template: "cost-categorization.yaml"
+    source: "sred/cost-tracking/YYYY-FY.yaml"
+    categories:
+      - eligible_experimental         # directly tied to uncertainty resolution
+      - partially_eligible_support    # supports experimentation but not exclusively
+      - non_eligible_routine          # standard engineering, deployment, polish
+
+  - id: "advisor-package"
+    format: "docx"
+    bundles: ["t661-narrative", "evidence-map", "cost-categorization"]
+    delivery: "gmail-draft"
+    recipient_role: "external.sred-advisor"
+    note: "Always draft. User reviews before sending to advisor."
+
+language_guidance:
+  # Used by project-funder-reporting when generating Section E/F/G narrative
+  preferred_uncertainty_openers:
+    - "It was uncertain whether"
+    - "It was not known whether"
+    - "No established method was identified for"
+    - "Existing approaches did not address"
+    - "Standard practice did not establish whether"
+  preferred_advancement_openers:
+    - "The work established that"
+    - "The investigation demonstrated that"
+    - "The work identified the conditions under which"
+    - "The work produced technological knowledge regarding"
+    - "This advanced the knowledge base by"
+  risky_language_patterns:
+    - "we built"
+    - "we needed to build"
+    - "the user required"
+    - "we developed a system"
+    - "we implemented"
+    - "we created"
+    - "we delivered"
+    - "production-ready"
+    - "the platform supports"

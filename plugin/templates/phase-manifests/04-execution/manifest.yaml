@@ -1,0 +1,23 @@
+# Phase 04 — Execution (Active Work)
+id: 04-execution
+label: "Execution (Active Work)"
+status: pending
+started: ~
+ended: ~
+
+gate_in:
+  description: "Kickoff SC meeting complete; planning gate closed"
+  evidence: []
+
+gate_out:
+  description: "All milestones complete OR project end date reached"
+  evidence: []
+
+required_recurring:
+  - "Quarterly Steering Committee meeting + minutes distributed within 5 business days"
+  - "Quarterly claim submission by 20th of Apr/Jul/Oct/Jan"
+  - "Monthly technical status brief (best practice)"
+  - "Ongoing change log entries; change orders as material changes arise"
+  - "Annual Questionnaire"
+  - "Annual risk assessment"
+  - "Ongoing IP reporting to PIC Director of IP"

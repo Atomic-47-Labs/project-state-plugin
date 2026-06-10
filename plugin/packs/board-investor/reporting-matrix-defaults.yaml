@@ -1,0 +1,23 @@
+defaults:
+  - stakeholder_group: board
+    report: board-pack
+    cadence: { kind: monthly, alignment: "second-tuesday", lead_time_days: 7 }
+    format: docx + meeting
+    surface: calendar.invite + gmail.draft
+    generator: project-review-meeting
+    profile: board-investor.review-meeting
+
+  - stakeholder_group: investors
+    report: monthly-investor-update
+    cadence: { kind: monthly, day: "first-friday", lead_time_days: 3 }
+    format: md
+    surface: gmail.draft
+    generator: project-funder-reporting
+    profile: board-investor.funder-reporting
+
+  - stakeholder_group: board
+    report: board-meeting-minutes
+    cadence: { kind: post-event, on: "board-meeting.held", within_business_days: 5 }
+    format: md
+    surface: gmail.draft
+    generator: project-review-meeting

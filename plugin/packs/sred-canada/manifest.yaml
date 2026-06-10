@@ -1,0 +1,67 @@
+pack:
+  id: "sred-canada"
+  name: "SR&ED Canada — Scientific Research & Experimental Development"
+  version: "0.1.0-starter"
+  compatible_core: ">=3.0"
+  description: |
+    Pack for Canadian projects claiming the SR&ED tax incentive (CRA T661/T2SCH1).
+    Extends the substrate with SR&ED-specific entities (technological uncertainties,
+    experiments, advancements, evidence log, cost tracking). Configures funder-reporting
+    for the annual CRA claim cycle with an 18-month filing window. Enables continuous
+    work-log capture during the project so claims are built from contemporaneous records
+    rather than reconstructed from memory at year-end.
+
+    Activates two SR&ED-specific skills:
+      - project-sred-tracker: continuous TU/EX/ADV capture + evidence log
+      - project-sred-reviewer: T661 narrative review and audit-risk reduction
+
+    Pairs naturally with any project-type pack (pic-pcais, client-services, agile-default,
+    board-investor). SR&ED runs in parallel with project delivery; it is a tax mechanism,
+    not a funder relationship.
+  authors:
+    - "David Olsson <david@atomic47.co>"
+  governing_documents:
+    - "CRA T661 SR&ED Expenditures Claim"
+    - "CRA T2SCH1 Net Income (Loss) for Income Tax Purposes"
+    - "CRA SR&ED Filing Requirements Policy"
+    - "Income Tax Act s.37 (SR&ED expenditures)"
+  released: "2026-05-11"
+  maturity: "starter"
+
+provides:
+  profiles:
+    - funder-reporting   # CRA annual claim cycle (T661 generation, 18-month window)
+    - phase-gate         # SR&ED readiness gates (evidence completeness, record retention)
+    - external-comms     # patent coordination (publication before claim can affect IP protection)
+  templates:
+    - t661-narrative.md           # T661 Sections E/F/G narrative template
+    - evidence-map.md             # Uncertainty → experiment → evidence → people/time
+    - cost-categorization.yaml    # Eligible / partial / non-eligible cost tracker per FY
+    - sred-project-summary.md     # CRA project-level description (project code, dates, field of science)
+  requires_skills:
+    - project-sred-tracker        # NEW skill — continuous capture
+    - project-sred-reviewer       # NEW skill — T661 review + audit-risk reduction
+  reporting_matrix_defaults: true
+
+substrate_extensions:
+  # New directories added to project-state/ when this pack is loaded
+  directories:
+    - path: "sred/uncertainties/"
+      description: "Technological uncertainty records (TU-NN-<slug>.yaml)"
+    - path: "sred/experiments/"
+      description: "Experiment / work-stream records (EX-NN-<slug>.yaml)"
+    - path: "sred/advancements/"
+      description: "Technological advancement records (ADV-NN-<slug>.yaml)"
+    - path: "sred/cost-tracking/"
+      description: "Annual SR&ED cost categorization (YYYY-FY.yaml)"
+  files:
+    - path: "sred/evidence-log.ndjson"
+      description: "Append-only evidence entries (date, record type, description, people, milestone)"
+    - path: "sred/state.json"
+      description: "SR&ED substrate counters and current FY claim status"
+
+depends_on:
+  packs: []   # standalone; pairs with any project-type pack
+
+conflicts_with:
+  packs: []   # no conflicts — SR&ED is a tax mechanism independent of funder/customer

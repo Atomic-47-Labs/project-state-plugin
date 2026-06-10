@@ -1,0 +1,23 @@
+defaults:
+  - stakeholder_group: team
+    report: sprint-retrospective
+    cadence: { kind: sprint-aligned, timing: "last-day-of-sprint" }
+    format: md
+    surface: gmail.draft + slack
+    generator: project-review-meeting
+    profile: agile-default.review-meeting
+
+  - stakeholder_group: engineering-leadership
+    report: bi-weekly-sprint-summary
+    cadence: { kind: bi-weekly, day: "monday-after-sprint" }
+    format: md
+    surface: gmail.draft
+    generator: project-status-reporter
+
+  - stakeholder_group: team
+    report: daily-standup-digest
+    cadence: { kind: daily, day: "weekday" }
+    format: slack
+    surface: slack
+    generator: project-status-reporter
+    optional: true   # opt-in if the team wants it

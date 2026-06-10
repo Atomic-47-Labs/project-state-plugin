@@ -1,0 +1,58 @@
+# sred-canada — external-comms profile
+# SR&ED-specific publication coordination.
+# Publishing before filing can affect IP protection; CRA also uses publication dates
+# to corroborate advancement claims. This profile adds SR&ED checks to the
+# external-comms review pipeline.
+
+profile_for: "project-external-comms"
+pack: "sred-canada"
+
+review_windows:
+  # SR&ED does not impose mandatory review periods like PIC's 30/14-day MPA rule,
+  # but publications should be reviewed for two SR&ED-specific concerns before release.
+
+  technical_papers:
+    review_days: 14
+    concerns:
+      - id: "sred-ip-coordination"
+        description: |
+          If the paper describes a technical advancement that is claimed in SR&ED,
+          confirm with the SR&ED advisor whether the publication creates any IP exposure
+          or requires patent filing before release.
+      - id: "sred-date-corroboration"
+        description: |
+          Publication date can corroborate (or contradict) the SR&ED advancement claim
+          timeline. Confirm the paper's technical content is consistent with the
+          corresponding ADV record before release.
+
+  conference_abstracts:
+    review_days: 7
+    concerns:
+      - id: "sred-ip-coordination"
+        description: "Same as technical_papers — confirm IP status before abstract submission."
+
+  blog_posts:
+    review_days: 3
+    concerns:
+      - id: "sred-content-check"
+        description: |
+          Blog posts describing experimental development methods, failures, or technical
+          learnings can support SR&ED claims. Confirm the post is consistent with
+          the corresponding TU/EX/ADV records (no contradictions in dates or outcomes).
+
+  press_releases:
+    review_days: 3
+    concerns:
+      - id: "sred-advancement-language"
+        description: |
+          Press release language claiming broad technical achievement may contradict
+          the more conservative, conditional language in the T661 advancement sections.
+          Review for consistency.
+
+registration_required:
+  # When a publication passes review, register it in the SR&ED substrate
+  on_clearance:
+    - action: "append_to_evidence_log"
+      entry_type: "publication_cleared"
+      fields: [title, date_cleared, date_published, linked_advancements]
+      rationale: "Published papers can serve as corroborating evidence for SR&ED advancements."

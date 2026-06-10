@@ -1,0 +1,68 @@
+# grant-canada — external-comms profile
+# Loaded by: project-external-comms skill
+# Governs publication, public communication, and IP rules for Canadian-funded
+# projects. Most Canadian funders require a review window before public release.
+
+profile_id: grant-canada.external-comms
+
+review_windows:
+  default:
+    days: 30
+    note: "Default 30-day review before any public communication"
+  tri-agency:
+    days: 0
+    note: "Tri-Agency does not impose a pre-publication review window; open access encouraged"
+    open_access_required: true
+    open_access_embargo_max_days: 365
+  pic:
+    days: 30
+    note: "MPA Appendix A: 30-day review; PIC Director of Data and IP must approve"
+    reviewer_role: "funder.pic.contacts.director_data_ip"
+  irap:
+    days: 30
+    note: "IRAP requires review of any public communication referencing IRAP funding"
+  nrc-general:
+    days: 30
+
+ip_rules:
+  declaration_required: true
+  declaration_trigger: "any novel method, software, or material arising from funded work"
+  declaration_deadline_days: 30
+  tto_routing: true
+  tto_role: "manifest.org.tto_contact"
+  stacking_disclosure: true
+  stacking_note: |
+    All Canadian grant programs require disclosure of other public funding
+    received for the same work (stacking rules). Declare in manifest.yaml
+    under funding.stacking_disclosures.
+
+indigenous_comms:
+  ocap_check: true
+  ocap_note: |
+    OCAP® principles (Ownership, Control, Access, Possession) apply to
+    any research involving Indigenous data or communities. Flag all
+    communications involving Indigenous-origin data for OCAP review before release.
+
+bilingual:
+  required_for: ["tri-agency", "nrc", "feddev", "fednor", "ced", "acoa", "cannor"]
+  note: "Official Languages Act: public communications from federally-funded research must be bilingual"
+
+review_checklist:
+  - id: ip-cleared
+    label: "IP declared to TTO and cleared for publication"
+    required: true
+  - id: funder-review-complete
+    label: "Funder review window elapsed or explicit approval received"
+    required: true
+  - id: stacking-disclosed
+    label: "All co-funders and stacking disclosed in acknowledgements"
+    required: true
+  - id: ocap-reviewed
+    label: "OCAP review completed (if Indigenous data involved)"
+    required_if: "indigenous_engagement == true"
+  - id: bilingual-ready
+    label: "French translation available (if bilingual required)"
+    required_if: "manifest.funder in bilingual.required_for"
+  - id: coauthor-approved
+    label: "All co-authors and consortium partners have approved"
+    required: true

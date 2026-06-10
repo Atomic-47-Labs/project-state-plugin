@@ -1,0 +1,67 @@
+# SR&ED Cost Categorization — Fiscal Year Template
+# One file per fiscal year: sred/cost-tracking/YYYY-FY.yaml
+# Used to populate T661 Schedule 1 cost allocation
+
+schema_version: 1
+fiscal_year: "TODO"             # e.g., 2025-12-31
+claim_period_start: "TODO"
+claim_period_end: "TODO"
+claimant_org: "TODO"
+
+# ─── Salary / Wages ───────────────────────────────────────────────────────────
+# Allocate each person's time across the three categories.
+# Keep timesheets or time allocation records for each person.
+
+salary:
+  - person: "TODO"
+    role: "TODO"                # e.g., "Software Engineer"
+    total_compensation_cad: 0
+    allocation:
+      eligible_experimental_pct: 0       # directly tied to uncertainty resolution
+      partially_eligible_support_pct: 0  # supports experimentation but not exclusively
+      non_eligible_routine_pct: 0        # standard engineering, deployment, polish
+    linked_experiments: []               # EX-NN IDs this person worked on
+    evidence: "TODO"                     # reference to timesheets or allocation basis
+
+# ─── Contractors ─────────────────────────────────────────────────────────────
+contractors:
+  - name_or_entity: "TODO"
+    contract_amount_cad: 0
+    allocation:
+      eligible_pct: 0
+      non_eligible_pct: 0
+    linked_experiments: []
+    evidence: "TODO"
+
+# ─── Materials ───────────────────────────────────────────────────────────────
+# Materials consumed directly in SR&ED experiments (not standard operating costs)
+materials:
+  - description: "TODO"
+    amount_cad: 0
+    linked_experiment: "TODO"
+    evidence: "TODO"
+
+# ─── Overhead (if using traditional method) ──────────────────────────────────
+# If using the traditional overhead method rather than proxy method.
+# Leave empty if using proxy (55% of SR&ED labour).
+overhead:
+  method: "proxy"               # "proxy" (55% of qualified labour) or "traditional"
+  traditional_overhead_cad: 0  # only if method: traditional
+
+# ─── Summary ─────────────────────────────────────────────────────────────────
+# Auto-calculated by project-sred-tracker from above allocations
+totals:
+  qualified_sr_and_ed_expenditures_cad: 0   # eligible salary + contractor + materials
+  itc_rate_pct: 0                           # 15% general / 35% CCPC qualifying
+  estimated_itc_cad: 0                      # for internal planning only — advisor confirms
+
+# ─── Cost defensibility notes ────────────────────────────────────────────────
+notes: |
+  TODO — notes on cost allocation methodology, any borderline items,
+  and the basis for categorization decisions.
+
+# ─── Advisor review ──────────────────────────────────────────────────────────
+advisor_review:
+  reviewed_by: ~
+  reviewed_date: ~
+  notes: ~

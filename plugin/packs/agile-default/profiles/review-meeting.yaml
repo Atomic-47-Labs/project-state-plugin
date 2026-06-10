@@ -1,0 +1,44 @@
+profile_id: agile-default.review-meeting
+
+meeting:
+  name: "Sprint Retrospective"
+  short_id_prefix: "RETRO"
+  cadence:
+    kind: sprint-aligned
+    sprint_length_weeks: 2   # configurable
+    timing: "last-day-of-sprint"
+  notice_minimum_days: 0   # standing meeting; no notice needed
+  duration_minutes: 60
+
+attendees:
+  required:
+    - id: engineering_team
+    - id: scrum_master_or_pl
+  optional:
+    - id: product_manager
+    - id: design
+
+agenda:
+  template: "templates/sprint-retro.md"
+  required_sections:
+    - "Sprint goals review (achieved? deferred?)"
+    - "What went well (Continue)"
+    - "What didn't (Stop)"
+    - "What to try (Start)"
+    - "Action items + owner + next-sprint commit"
+
+preread_pack:
+  assembly:
+    - milestones.completed-this-sprint
+    - milestones.deferred
+    - decisions.recently-recorded
+    - lessons.captured-this-sprint
+  output: "reports/retros/{retro-id}.md"
+  distribution_lead_days: 0
+
+minutes:
+  capture: "in-meeting; written into the retro doc as the meeting runs"
+  filing: "retros/{retro-id}.md"
+  action_items:
+    file_as: "tasks"
+    sprint_commit: true

@@ -1,0 +1,44 @@
+# sred-canada — phase-gate profile
+# Adds SR&ED readiness checks to project phase gate criteria.
+# Injects into whatever phase preset is active (grant-default, agile-default, etc.)
+
+profile_for: "project-phase-gate"
+pack: "sred-canada"
+
+gate_injections:
+  # Inject into any phase that has active execution work
+  # (matches phases with status in_progress or where milestones exist)
+
+  execution_gate_in:
+    # Additional gate-in criteria when entering an active execution phase
+    required_artifacts:
+      - "sred/state.json initialized with current fiscal year"
+      - "At least one TU record created for the first technical work stream"
+    checklist_items:
+      - "SR&ED eligibility discussed with tax advisor (or documented why not applicable)"
+      - "Fiscal year end date recorded in manifest.yaml:sred.fiscal_year_end"
+      - "18-month filing deadline calculated and noted in reporting matrix"
+
+  execution_recurring:
+    # Recurring checks during execution phases (evaluated quarterly)
+    - "Evidence log updated within the last 30 days for each active TU"
+    - "All completed milestones with experimental work have linked EX records"
+    - "No TU older than 90 days without at least one linked EX"
+
+  closeout_gate_out:
+    # Additional gate-out criteria before project closeout
+    required_artifacts:
+      - "sred/cost-tracking/YYYY-FY.yaml completed for all active fiscal years"
+      - "T661 narrative draft completed OR SR&ED non-applicable decision documented"
+      - "Evidence map complete: all TUs, EXs, and ADVs cross-referenced"
+    checklist_items:
+      - "SR&ED advisor engaged or waived"
+      - "18-month deadline confirmed — no fiscal year at risk"
+      - "Salary/contractor costs allocated per eligible/non-eligible categories"
+      - "All evidence records retained (commits, test outputs, meeting notes)"
+
+fiscal_year:
+  # Populated from manifest.yaml:sred.fiscal_year_end at scaffold time
+  deadline_warning_days: 180   # warn when within 6 months of 18-month deadline
+  deadline_alert_days: 90      # alert when within 3 months of 18-month deadline
+  deadline_critical_days: 30   # critical: 30 days to deadline

@@ -1,0 +1,61 @@
+# Phase 03 — Planning (MPA → Kickoff)
+id: 03-planning
+label: "Planning (MPA → Kickoff)"
+status: current    # adjust based on your project history
+started: ~
+ended: ~
+
+gate_in:
+  description: "Proposal approved by PIC"
+  evidence: []   # Link to approval letter once registered in documents/source-of-truth
+
+gate_out:
+  description: "First Steering Committee meeting held; SOPs established; project work initiated"
+  checklist:
+    - id: planning.mpa_signed
+      label: "MPA signed by all Consortium Members and PIC"
+      done: false
+      evidence: ~
+    - id: planning.sc_contacts_form
+      label: "Steering Committee Designates Contact Information form completed"
+      done: false
+    - id: planning.sc_sop
+      label: "Steering Committee SOP (from PIC template) established and distributed"
+      done: false
+    - id: planning.comms_plan
+      label: "Joint communications plan with PIC communications team"
+      done: false
+    - id: planning.announcement_date
+      label: "Public announcement date coordinated (cannot pre-empt PIC press)"
+      done: false
+    - id: planning.capital_foreign_requests
+      label: "Capital and Foreign cost requests submitted (if applicable)"
+      done: false
+      not_applicable: ~
+    - id: planning.first_sc_scheduled
+      label: "First SC meeting scheduled with 5 business days' notice"
+      done: false
+    - id: planning.agenda_from_appendix_a
+      label: "First SC agenda uses PIC PM Guide Appendix A first-meeting template"
+      done: false
+    - id: planning.ms_decomposition
+      label: "Milestone-to-task decomposition for first quarter drafted"
+      done: false
+    - id: planning.initial_risks
+      label: "Initial risk register populated (≥5 risks)"
+      done: false
+    - id: planning.ip_rationale_baseline
+      label: "Current IP rationale captured as baseline (for future change-order diffs)"
+      done: false
+
+required_artifacts_paths:
+  mpa_signed: ~
+  sc_sop: ~
+  sc_contacts_form: ~
+  announcement_plan: ~
+  first_sc_agenda: ~
+  first_sc_minutes: ~
+
+milestones_defined: []
+decisions_recorded: []
+risks_identified: []

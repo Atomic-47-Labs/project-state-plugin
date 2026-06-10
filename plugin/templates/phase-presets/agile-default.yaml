@@ -1,0 +1,27 @@
+preset_id: agile-default
+description: |
+  Engineering team running Scrum/Kanban with release trains.
+  The "Build-loops" phase recurs — sprints are not phase transitions; releases are.
+
+phases:
+  - id: "01-discovery"
+    label: "Discovery"
+    gate_in: ~
+    gate_out: "Initial scope agreed; first sprint queue defined"
+
+  - id: "02-build-loops"
+    label: "Build (recurring sprint loops)"
+    gate_in: "Discovery complete"
+    gate_out: "Release candidate ready"
+    recurring: true   # this phase doesn't terminate; sprints iterate within it
+
+  - id: "03-hardening"
+    label: "Hardening"
+    gate_in: "Release candidate ready"
+    gate_out: "RC stabilized; release notes prepared"
+
+  - id: "04-release"
+    label: "Release"
+    gate_in: "RC stabilized"
+    gate_out: "Released to production"
+    cycles_back_to: "02-build-loops"   # after release, return to building

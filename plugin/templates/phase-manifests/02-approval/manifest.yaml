@@ -1,0 +1,11 @@
+# Phase 02 — Submission & Approval
+id: 02-approval
+label: "Submission & Approval"
+status: complete
+started: ~
+ended: ~
+gate_in: {description: "LOI accepted"}
+gate_out:
+  description: "Proposal approved by PIC; invited to execute MPA"
+  evidence: []
+notes: "Typically complete by the time scaffolding begins."

@@ -1,0 +1,49 @@
+# PIC PCAIS — archive profile
+# Loaded by: project-archive skill
+
+profile_id: pic-pcais.archive
+
+closeout_workflow:
+  pre_close_kickoff_days: 90    # ~90 days before project end, distribute final report templates
+  draft_due: "by project end date"
+  finalization_window_days: 30   # finalize 30 days post-close
+
+required_artifacts:
+  - id: pic-final-report-per-member
+    description: "PIC final report, one per consortium member, per PIC template"
+    template: "templates/pic-final-report.docx"
+    one_per: "consortium member"
+    cover_delivery:
+      surface: gmail.draft
+      to: "{funder.pic.contacts.pm}"
+      cc: ["{funder.pic.contacts.financial_analyst}"]
+
+  - id: ip-final-reporting
+    description: "Final IP disclosure summary; foreground IP fully accounted for; commercialization status"
+    template: "templates/pic-ip-final-report.md"
+    coordinates_with: project-ip-tracker
+
+  - id: fte-confirmation
+    description: "Confirmed FTE counts per member, per PIC requirement"
+    format: "xlsx; PIC-supplied template"
+    template: "templates/pic-fte-confirmation.xlsx"
+
+  - id: final-financial-reconciliation
+    description: "Final claim covering closeout period; reconciliation against MPA budget"
+    coordinates_with: project-funder-reporting
+    profile_used: pic-pcais.funder-reporting
+
+  - id: lessons-learned-summary
+    description: "Summary assembled from continuous lessons-learned capture"
+    template: "templates/lessons-learned-summary.md"
+    coordinates_with: project-lessons
+
+  - id: holdback-release-tracking
+    description: "Track PIC holdback release after final reports accepted"
+    timeline: "post-finalization, may take weeks-to-months"
+    completion_event: "holdback.released"
+
+post_close:
+  archive_directory: "project-state/archive-{closeout-date}/"
+  retention: "indefinite; per MPA records-retention requirements"
+  audit_trail_finalization: "last activity.ndjson entry timestamped + closeout README written"

@@ -1,0 +1,237 @@
+# ============================================================================
+# ⚠️  DEPRECATED — v1 schema (schema_version: 1)
+#
+# This template is kept for reference during v1.x → v2.0 migration only.
+# For all new projects, use `templates/manifest-v2.yaml` instead.
+# The `project-scaffolder` skill generates a v2 manifest interactively.
+# ============================================================================
+#
+# PROJECT MANIFEST TEMPLATE — stable identity of your PIC project (v1 schema)
+#
+# Fields marked `~` are YAML null — fill them in when known.
+# Fields marked `TODO` are placeholders to replace with real values.
+#
+# ============================================================================
+
+schema_version: 1
+manifest_kind: project
+
+project:
+  short_name: "TODO-ProjectShortName"       # e.g., "Ai26.10"
+  pic_project_number: "TODO-ProjectNumber"   # e.g., "Ai26.10"
+  long_name: "TODO-LongProjectTitle"
+  proposal_title: "TODO-FullProposalTitle"
+  one_liner: |
+    TODO — one-paragraph description of what the project does and why.
+  funder: "Protein Industries Canada (PIC)"
+  program: "TODO-ProgramName"                # e.g., "PCAIS — Protein Consortia AI Stream"
+  governing_document: "Master Project Agreement (MPA)"
+  governing_document_status: "pending signature"    # update on MPA execution
+  schedule_a_workbook: "TODO-path/to/PCAIS-Program-Workbook.xlsx"
+  financial_assessment_workbook: "TODO-path/to/Financial-Assessment.xlsx"
+  proposal_docx: "TODO-path/to/Approved-Proposal.docx"
+
+budget:
+  total_project_cad: 0                       # TODO fill
+  pic_co_investment_cad: 0                   # TODO fill
+  consortium_co_investment_cad: 0            # TODO fill
+  currency: "CAD"
+  funding_body_mention: "Global Innovation Cluster co-investment"
+
+dates:
+  loi_submitted: ~
+  proposal_submitted: ~                      # YYYY-MM-DD
+  approval_date: ~
+  mpa_signed: ~
+  proposal_orientation_meeting: ~
+  first_steering_committee_meeting: ~
+  project_start: ~                           # e.g., 2026-04-01
+  project_end: ~                             # e.g., 2027-03-31
+
+# PIC reporting cadence is fixed by the PM Guide; copy as-is for PCAIS projects.
+reporting_calendar:
+  financial_reporting_frequency: "quarterly"   # or "monthly" per MPA
+  quarterly_claim_due_dates:
+    - "04-20"  # Q1 claim covers Jan–Mar
+    - "07-20"  # Q2 claim covers Apr–Jun
+    - "10-20"  # Q3 claim covers Jul–Sep
+    - "01-20"  # Q4 claim covers Oct–Dec (following year)
+  steering_committee_minimum_frequency: "quarterly"
+  steering_committee_notice_days: 5          # business days minimum per MPA
+  steering_committee_meeting_lookahead: 90   # schedule 3 months in advance
+  minutes_distribution_days: 5               # business days post-meeting
+  publication_review_days: 30                # 30 days for full; 14 days for abstracts
+  publication_abstract_review_days: 14
+  final_report_template_distribution: "~90 days pre-close"
+  final_report_finalization: "30 days post-close"
+
+consortium:
+  project_lead_organization:
+    name: "TODO-Lead-Org"                    # The consortium project lead
+    role: "Consortium Project Lead"
+    short_code: "TODO-LeadShortCode"          # e.g., "A47"
+  members:
+    - organization: "TODO-Lead-Org"
+      short_code: "TODO-LeadShortCode"
+      role: "Consortium Project Lead; primary technical work description"
+      ceo: "TODO-Name"
+      ceo_email: "TODO@email"
+      ceo_phone: "TODO-phone"
+      owns_milestones: []                    # fill after milestones are seeded
+    - organization: "TODO-Member-Org"
+      short_code: "TODO-MemberShortCode"
+      role: "Consortium Member; their primary role description"
+      ceo: "TODO-Name"
+      ceo_email: "TODO@email"
+      ceo_phone: "TODO-phone"
+      facility: "TODO-Facility-Location"
+      owns_milestones: []
+
+steering_committee:
+  chair: ~                                   # set after SC designates named
+  designates:
+    # For EACH Consortium Member, collect the four required contacts per PIC PM Guide p.4
+    project_lead: ~
+    finance_representative: ~
+    communications_representative: ~
+    signing_authority: ~
+  pic_representative: ~                      # Non-voting, PIC-designated
+
+pic_contacts:
+  pic_project_manager: ~
+  pic_financial_analyst: ~
+  pic_director_ip: ~                         # Director of Data and Intellectual Property
+  pic_communications: ~
+
+# The phase lifecycle. Order matters. Current phase is pointed to by state.json.
+# Phase manifests with gate checklists live under project-state/phases/<id>/manifest.yaml
+phases:
+  - id: "01-loi"
+    label: "Letter of Intent"
+    gate_in: ~
+    gate_out: "LOI accepted by PIC"
+    status: "complete"                       # adjust based on project history
+  - id: "02-approval"
+    label: "Submission & Approval"
+    gate_in: "LOI accepted"
+    gate_out: "Proposal approved by PIC"
+    status: "complete"
+  - id: "03-planning"
+    label: "Planning (MPA → Kickoff)"
+    gate_in: "Proposal approved"
+    gate_out: "First Steering Committee meeting held; SOPs established"
+    status: "current"                        # adjust to your current phase
+    required_artifacts:
+      - "Signed MPA (all parties)"
+      - "Steering Committee Designates Contact Information form"
+      - "Steering Committee SOP (PIC template)"
+      - "Project kickoff communications plan (with PIC communications)"
+      - "Initial project risk register"
+      - "Milestone-to-task decomposition for first quarter"
+      - "Foreign/Capital cost requests (if applicable)"
+  - id: "04-execution"
+    label: "Execution (Active Work)"
+    gate_in: "Kickoff SC meeting complete"
+    gate_out: "All milestones complete OR project end date reached"
+    status: "pending"
+    required_recurring:
+      - "Quarterly Steering Committee meeting + minutes distributed within 5 business days"
+      - "Quarterly claim submission by 20th of Apr/Jul/Oct/Jan"
+      - "Monthly technical status brief (best practice)"
+      - "Ongoing change log entries; change orders as material changes arise"
+      - "Annual Questionnaire"
+      - "Annual risk assessment"
+      - "Ongoing IP reporting to PIC Director of IP"
+  - id: "05-closeout"
+    label: "Closeout & Final Reporting"
+    gate_in: "Project end date reached"
+    gate_out: "Final reports accepted; holdback released"
+    status: "pending"
+    required_artifacts:
+      - "Final report per Consortium member (PIC template)"
+      - "IP final reporting + abstract reviews"
+      - "FTE confirmation"
+      - "Final financial reconciliation"
+      - "Lessons Learned summary"
+  - id: "06-archive"
+    label: "Archive"
+    gate_in: "Holdback released; MPA closed"
+    gate_out: ~
+    status: "pending"
+
+# How the skill suite routes artifacts to surfaces.
+# Fill in channel IDs and site slugs as you wire surfaces.
+surfaces:
+  slack:
+    enabled: true
+    channels:
+      daily_standup: ~                        # e.g., "#proj-short-daily"
+      weekly_report: ~                        # e.g., "#proj-short-weekly"
+      alerts: ~                               # phase transitions, overdue claims
+  gmail:
+    enabled: true
+    from_identity: "TODO@email"
+    default_recipients:
+      pic_project_manager: ~
+      consortium_leads: []
+    always_draft: true                        # CRITICAL: never auto-send
+  scsiwyg:
+    enabled: true
+    site_slug: ~                              # set via `mcp__scsiwyg__get_my_site`
+    blog_audience: "team"                     # "team" | "consortium" | "public"
+    publication_review_required: true         # per MPA
+  jira:                                       # harvested via the Atlassian MCP connector
+    enabled: false
+    projects: []                              # Jira project keys to watch, e.g. ["LEDGER"]
+    jql: ~                                    # optional explicit JQL (overrides projects scan)
+    site: ~                                   # Atlassian cloud id if the connector serves several
+  confluence:                                 # harvested via the Atlassian MCP connector
+    enabled: false
+    spaces: []                                # Confluence space keys to watch, e.g. ["ENG"]
+    cql: ~                                    # optional explicit CQL
+    site: ~
+  linear:                                     # harvested via the Linear MCP connector
+    enabled: false
+    teams: []                                 # Linear team keys to watch, e.g. ["ENG"]
+    projects: []                              # optional Linear project ids/names
+    query: ~                                  # optional free-text/filter query
+  google_calendar:
+    enabled: true
+    calendar_id: "primary"
+    event_prefixes:
+      sc_meeting: "[SC] "
+      claim_deadline: "[PIC Claim Due] "
+      pic_milestone: "[PIC Milestone] "
+      internal_review: "[Internal] "
+  website:                                    # NEW v1.1: project-website-publisher
+    enabled: false                            # set true once you've run project-website-publisher.init-website
+    framework: "nextjs"                       # nextjs | astro | eleventy
+    hosting: "vercel"                         # vercel | netlify | cloudflare-pages | github-pages
+    production_url: ~                         # e.g., "https://your-project.vercel.app/"
+    preview_urls_enabled: true                # ephemeral preview URLs per branch / PR
+    auto_deploy_on_publish: true              # rebuild + deploy when documents/published/ changes
+    require_review_for_public: true           # MPA 30/14-day publication review enforcement
+    default_visibility: "consortium"          # team | consortium | public — default for new docs
+    download_dir_max_size_mb: 100             # cap on total size of website/public/downloads/
+    notification_channel_after_deploy: ~      # e.g., "#proj-deploys"
+
+# Tech Reports — what SOURCE the project-tech-reports skill studies (codebase intel).
+tech_reports:
+  source:
+    kind: auto                                # auto | local | github | jira | confluence | path | none
+    # auto → the enclosing repo (the folder holding project-state/) if it has code,
+    #        else a connected github repo below, else an enabled jira/confluence surface.
+    repo: ~                                    # github: "owner/name" (private; team token reads it)
+    path: ~                                    # local: an explicit directory to study
+
+# Concurrency model for shared-drive writes. See docs/CONCURRENCY.md.
+concurrency:
+  model: "shared-drive"
+  write_rules: "file-per-entity, frontmatter timestamps, advisory lockfiles, append-only logs"
+  lock_ttl_seconds: 300
+
+meta:
+  created: ~                                 # set by project-scaffolder
+  created_by: "TODO@email"
+  last_modified: ~
+  last_modified_by: ~

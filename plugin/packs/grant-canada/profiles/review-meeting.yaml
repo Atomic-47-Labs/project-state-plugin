@@ -1,0 +1,84 @@
+# grant-canada — review-meeting profile
+# Loaded by: project-review-meeting skill
+# Covers: Grant Advisory Committee (GAC) and internal project review meetings
+# for Canadian-funded research projects (post-award).
+
+profile_id: grant-canada.review-meeting
+
+meeting_kinds:
+
+  - id: gac
+    label: "Grant Advisory Committee"
+    cadence: semi-annual
+    quorum: "majority of external advisors + PI"
+    agenda_template: "templates/gac-agenda.md"
+    required_sections:
+      - id: progress-vs-milestones
+        title: "Technical Progress vs. Milestones"
+        source: "milestones/*.yaml"
+        generated_by: project-status-reporter
+      - id: financial-status
+        title: "Financial Status Summary"
+        note: "Prepared by Finance Rep; not auto-generated"
+      - id: risk-review
+        title: "Risk Register Review"
+        source: "risks/*.yaml"
+        generated_by: project-state
+      - id: ip-update
+        title: "IP and Publication Update"
+        source: "ip/*.yaml + publications/*.yaml"
+        generated_by: project-state
+      - id: next-period-plan
+        title: "Plan for Next Period"
+        note: "Authored by PI before meeting"
+    deliverables:
+      - id: agenda
+        due: "5 business days before meeting"
+        surface: gmail.draft
+      - id: minutes
+        due: "5 business days after meeting"
+        surface: gmail.draft
+      - id: action-items
+        due: "same day as minutes"
+        stored_at: "reports/review-meetings/{YYYY}-{MM}-gac-actions.yaml"
+
+  - id: consortium-sc
+    label: "Steering Committee"
+    cadence: quarterly
+    quorum: "one representative per consortium member"
+    agenda_template: "templates/sc-agenda.md"
+    required_sections:
+      - id: progress-vs-milestones
+        title: "Milestone Progress"
+        source: "milestones/*.yaml"
+      - id: budget-vs-actuals
+        title: "Budget vs. Actuals"
+        note: "Finance Rep prepares"
+      - id: risks-decisions
+        title: "Risks and Decisions Since Last Meeting"
+        source: "risks/*.yaml + decisions/*.yaml"
+      - id: upcoming-deliverables
+        title: "Upcoming Deliverables and Deadlines"
+        generated_by: project-orchestrator
+    deliverables:
+      - id: agenda
+        due: "5 business days before meeting"
+        surface: gmail.draft
+      - id: minutes
+        due: "5 business days after meeting"
+        surface: gmail.draft
+
+  - id: tto-ip-review
+    label: "TTO IP Review"
+    cadence: event-driven
+    trigger: ip.disclosed
+    required_sections:
+      - id: disclosure-summary
+        title: "IP Disclosure Summary"
+        source: "ip/{id}.yaml"
+      - id: commercialization-options
+        title: "Commercialization Pathway"
+    deliverables:
+      - id: tto-recommendation
+        due: "15 business days after disclosure"
+        stored_at: "ip/tto-recommendation-{id}.yaml"

@@ -1,0 +1,23 @@
+# Phase 06 — Archive
+id: 06-archive
+label: "Archive"
+status: pending
+started: ~
+ended: ~
+
+gate_in:
+  description: "Holdback released; MPA closed"
+  evidence: []
+
+gate_out:
+  description: "~"    # terminal phase
+  checklist:
+    - id: archive.state_frozen
+      label: "project-state/ frozen as read-only archive"
+      done: false
+    - id: archive.artifacts_distributed
+      label: "Final artifacts distributed to all consortium members"
+      done: false
+    - id: archive.records_retention
+      label: "Records retention plan applied (per MPA + regulatory requirements)"
+      done: false

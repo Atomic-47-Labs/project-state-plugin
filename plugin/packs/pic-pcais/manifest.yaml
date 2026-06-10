@@ -1,0 +1,50 @@
+# Pack: PIC PCAIS — Protein Industries Canada (Protein Consortia AI Stream)
+#
+# Reproduces v1.x behavior of the suite for a PIC PCAIS-funded consortium project.
+# Loading this pack alone gives you the full v1.x experience.
+#
+# Compatible cores: 2.0+
+# Pack version: 1.0.0
+
+pack:
+  id: "pic-pcais"
+  name: "Protein Industries Canada — PCAIS"
+  version: "1.0.0"
+  compatible_core: ">=2.0,<3.0"
+  description: |
+    Funder pack for Protein Industries Canada PCAIS-funded consortium projects.
+    Encodes PIC PM Guide requirements: quarterly claim cadence (Apr/Jul/Oct/Jan 20),
+    Steering Committee lifecycle per Appendix A, MPA-mandated 30/14-day publication
+    review, IP routing to PIC Director of Data and IP, six-phase project lifecycle
+    (LOI → Approval → Planning → Execution → Closeout → Archive), final reporting
+    workflow with 90-day pre-close template distribution and 30-day post-close
+    finalization, FTE confirmation, holdback release tracking.
+  authors:
+    - "David Olsson <david@atomic47.co>"
+  governing_documents:
+    - "PIC PM Guide (Protein Industries Canada Project Management Guide)"
+    - "Master Project Agreement template"
+  released: "2026-04-27"
+
+provides:
+  profiles:
+    - funder-reporting
+    - review-meeting
+    - external-comms
+    - ip-tracker
+    - archive
+    - phase-gate
+  templates:
+    - claim-cover-email.md
+    - sc-agenda-appendix-a.md
+    - final-report.md
+    - ip-disclosure.md
+    - publication-review-form.md
+  reporting_matrix_defaults: true
+
+depends_on:
+  packs: []     # standalone
+
+conflicts_with:
+  packs: []     # PIC pack is compatible with any non-PIC funder/customer pack
+                # (they declare different stakeholders + different reporting matrix entries)

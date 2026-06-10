@@ -1,0 +1,64 @@
+# PIC PCAIS — reporting matrix defaults
+# Seeded into project's project-state/reporting-matrix.yaml when this pack loads
+# via `project-scaffolder seed-matrix --pack pic-pcais`
+
+defaults:
+  - stakeholder_group: funder.pic
+    report: pic-quarterly-claim
+    cadence: { kind: quarterly, days: ["04-20", "07-20", "10-20", "01-20"], lead_time_days: 14 }
+    format: xlsx
+    surface: gmail.draft
+    generator: project-funder-reporting
+    profile: pic-pcais.funder-reporting
+
+  - stakeholder_group: funder.pic
+    report: sc-meeting-pack
+    cadence: { kind: quarterly, alignment: "first-month-of-quarter" }
+    format: docx
+    surface: calendar.invite + gmail.draft
+    generator: project-review-meeting
+    profile: pic-pcais.review-meeting
+
+  - stakeholder_group: funder.pic
+    report: ip-disclosures
+    cadence: { kind: ad-hoc, on_event: "ip.disclosure.created" }
+    format: md + email
+    surface: gmail.draft
+    generator: project-ip-tracker
+    profile: pic-pcais.ip-tracker
+
+  - stakeholder_group: funder.pic
+    report: annual-questionnaire
+    cadence: { kind: annual, due_month: "04" }
+    format: docx
+    surface: gmail.draft
+    generator: project-funder-reporting
+    profile: pic-pcais.annual-questionnaire
+
+  - stakeholder_group: consortium.all
+    report: sc-meeting-minutes
+    cadence: { kind: post-event, on: "sc-meeting.held", within_business_days: 5 }
+    format: md
+    surface: gmail.draft
+    generator: project-review-meeting
+
+  - stakeholder_group: consortium.all
+    report: bi-weekly-stakeholder-update
+    cadence: { kind: bi-weekly, day: "friday-odd-week" }
+    format: md
+    surface: gmail.draft
+    generator: project-status-reporter
+
+  - stakeholder_group: internal.team
+    report: monday-tracker-email
+    cadence: { kind: weekly, day: "monday" }
+    format: md
+    surface: gmail.draft + slack
+    generator: project-status-reporter
+
+  - stakeholder_group: public
+    report: reference-docs
+    cadence: { kind: on-publish, trigger: "documents/published/" }
+    format: mdx
+    surface: website
+    generator: project-website-publisher

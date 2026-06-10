@@ -1,0 +1,46 @@
+# PIC PCAIS — funder-reporting profile
+# Loaded by: project-funder-reporting skill
+# Purpose: reproduce v1.x project-claim-prep behavior
+
+profile_id: pic-pcais.funder-reporting
+stakeholder_group: funder.pic
+
+reports:
+  - id: pic-quarterly-claim
+    name: "PIC Quarterly Claim"
+    description: |
+      The PIC PM Guide's MS & financial tracking workbook, populated with current
+      milestone state, technical progress narrative, and member expense submissions.
+    cadence:
+      kind: quarterly
+      due_days_of_year: ["04-20", "07-20", "10-20", "01-20"]
+      coverage_window: "previous quarter"
+      lead_time_days: 14   # draft is produced 14 days before deadline
+    format:
+      kind: xlsx
+      template: "templates/ms-and-financial-tracking.xlsx"
+      output_naming: "reports/funder.pic/claims/{YYYY}-Q{Q}-pic-claim.xlsx"
+    field_mapping:
+      milestones:
+        source: "milestones/*.yaml"
+        fields:
+          - { from: "id", to: "Milestone_ID" }
+          - { from: "title", to: "Milestone_Title" }
+          - { from: "percent_complete", to: "Percent_Complete" }
+          - { from: "technical_progress", to: "Technical_Progress_Narrative" }
+          - { from: "owner_short_code", to: "Member_Owner" }
+      member_expenses:
+        source: "communications/finance/{YYYY}-{MM}-member-expense.yaml"
+        per_member: true
+    cover_delivery:
+      surface: gmail.draft
+      to: "{funder.pic.contacts.pm}"
+      cc: ["{funder.pic.contacts.financial_analyst}"]
+      template: "templates/claim-cover-email.md"
+      subject: "Ai26.10 — Q{Q} {YYYY} Claim Submission"
+    signoff_required:
+      - role: project_lead
+      - role: finance_representative
+    submission: "manual"   # finance rep submits to PIC; skill never auto-sends
+
+monthly_close_alignment: true   # this report participates in synchronized monthly close

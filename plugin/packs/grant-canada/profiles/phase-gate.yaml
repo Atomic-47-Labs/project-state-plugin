@@ -1,0 +1,91 @@
+# grant-canada — phase-gate profile
+# Loaded by: project-phase-gate skill (post-award project-state/ facility)
+# This profile governs the EXECUTION phase lifecycle after award.
+# Pre-award phases are tracked in grant-state/ (see grant-scaffolder skill).
+
+profile_id: grant-canada.phase-gate
+
+# Post-award execution lifecycle
+# The grant-canada pack adds one extra gate condition to each standard phase:
+# the carry-forward artifacts from grant-state/ must be verified on entry.
+
+phases:
+  - id: "01-loi"
+    label: "Letter of Intent"
+    gate_in:
+      - id: award-record-present
+        description: "grant-state/ award.yaml exists and status is 'awarded'"
+        auto_close: false
+      - id: carryforward-verified
+        description: "Consortium people, IP rationale, milestones imported from grant-state/"
+        auto_close: false
+    gate_out:
+      - id: mpa-signed
+        description: "Master Project Agreement signed by all consortium members"
+        auto_close: false
+      - id: tto-ip-rationale-accepted
+        description: "TTO has accepted the IP rationale carried from submission"
+        auto_close: false
+
+  - id: "02-approval"
+    label: "Approval"
+    gate_in:
+      - id: mpa-executed
+        description: "Signed MPA on file"
+        auto_close: false
+    gate_out:
+      - id: first-claim-period-defined
+        description: "First reporting period and claim due date confirmed"
+        auto_close: false
+      - id: baseline-milestones-confirmed
+        description: "Milestones re-baselined to execution timeline"
+        auto_close: false
+
+  - id: "03-planning"
+    label: "Planning"
+    gate_in: []
+    gate_out:
+      - id: kick-off-held
+        description: "Project kick-off meeting held with all consortium members"
+        auto_close: false
+      - id: risk-register-seeded
+        description: "Risk register seeded (min 5 risks)"
+        auto_close: true
+        condition: "count(risks/*.yaml) >= 5"
+      - id: reporting-matrix-confirmed
+        description: "Reporting matrix reviewed and customized for this funder"
+        auto_close: false
+
+  - id: "04-execution"
+    label: "Execution"
+    gate_in: []
+    gate_out:
+      - id: all-milestones-complete
+        description: "All milestones at 100%"
+        auto_close: true
+        condition: "all(milestones/*.yaml, percent_complete == 100)"
+      - id: final-claim-submitted
+        description: "Final claim submitted to funder"
+        auto_close: false
+      - id: ip-disclosures-complete
+        description: "All IP disclosures filed"
+        auto_close: false
+
+  - id: "05-closeout"
+    label: "Closeout"
+    gate_in: []
+    gate_out:
+      - id: final-report-submitted
+        description: "Final technical report submitted to funder"
+        auto_close: false
+      - id: holdback-released
+        description: "Holdback payment received (if applicable)"
+        auto_close: false
+      - id: data-retention-confirmed
+        description: "Data retention plan confirmed (6 years minimum, Tri-Agency requirement)"
+        auto_close: false
+
+  - id: "06-archive"
+    label: "Archive"
+    gate_in: []
+    gate_out: []

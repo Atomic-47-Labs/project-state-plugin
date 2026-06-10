@@ -1,0 +1,50 @@
+# PIC PCAIS — phase-gate profile
+# Loaded by: project-phase-gate skill
+# Purpose: augment grant-default preset with PIC-specific gate criteria
+
+profile_id: pic-pcais.phase-gate
+
+base_preset: grant-default
+
+phase_gate_overrides:
+
+  - phase_id: "01-loi"
+    gate_in: ~
+    gate_out: "LOI accepted by PIC"
+
+  - phase_id: "02-approval"
+    gate_in: "LOI accepted by PIC"
+    gate_out: "Proposal approved by PIC"
+
+  - phase_id: "03-planning"
+    gate_in: "Proposal approved by PIC"
+    gate_out: "First Steering Committee meeting held; all SOPs established"
+    additional_required_artifacts:
+      - "Signed MPA (all parties)"
+      - "Steering Committee Designates Contact Information form"
+      - "Steering Committee SOP (PIC template)"
+      - "Project kickoff communications plan (with PIC communications)"
+      - "Initial project risk register"
+      - "Milestone-to-task decomposition for first quarter"
+      - "Foreign/Capital cost requests (if applicable)"
+
+  - phase_id: "04-execution"
+    gate_in: "Kickoff SC meeting complete"
+    gate_out: "All milestones complete OR project end date reached"
+    required_recurring:
+      - "Quarterly Steering Committee meeting + minutes distributed within 5 business days"
+      - "Quarterly claim submission by 20th of Apr/Jul/Oct/Jan"
+      - "Monthly technical status brief (best practice)"
+      - "Ongoing change log entries; change orders as material changes arise"
+      - "Annual Questionnaire"
+      - "Annual risk assessment"
+      - "Ongoing IP reporting to PIC Director of Data and IP"
+
+  - phase_id: "05-closeout"
+    gate_in: "Project end date reached"
+    gate_out: "Final reports accepted by PIC; holdback released"
+    required_artifacts: "from packs/pic-pcais/profiles/archive.yaml"
+
+  - phase_id: "06-archive"
+    gate_in: "Holdback released; MPA closed"
+    gate_out: ~

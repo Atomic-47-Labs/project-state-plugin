@@ -1,0 +1,38 @@
+preset_id: client-engagement-default
+description: |
+  Consulting/client-services engagement lifecycle.
+
+phases:
+  - id: "01-discovery"
+    label: "Discovery"
+    gate_in: ~
+    gate_out: "Customer brief understood; rough scope agreed"
+
+  - id: "02-proposal"
+    label: "Proposal & SOW"
+    gate_in: "Discovery complete"
+    gate_out: "SOW signed; PO received"
+
+  - id: "03-engagement"
+    label: "Engagement (Active Work)"
+    gate_in: "SOW signed"
+    gate_out: "All SOW deliverables accepted by customer"
+    required_recurring:
+      - "Monthly invoice"
+      - "Monthly status update"
+      - "Quarterly Business Review"
+
+  - id: "04-wrap"
+    label: "Engagement Wrap"
+    gate_in: "All deliverables accepted"
+    gate_out: "Final invoice paid; engagement closed"
+    required_artifacts:
+      - "Customer signoff on completion"
+      - "Final deliverable handover"
+      - "Post-engagement support window setup (if applicable)"
+      - "Lessons Learned summary"
+
+  - id: "05-archive"
+    label: "Archive"
+    gate_in: "Engagement closed"
+    gate_out: ~

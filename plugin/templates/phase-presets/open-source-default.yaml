@@ -1,0 +1,23 @@
+preset_id: open-source-default
+description: |
+  Community-governed open-source project lifecycle.
+
+phases:
+  - id: "01-incubation"
+    label: "Incubation"
+    gate_in: ~
+    gate_out: "First public release; stable governance docs"
+  - id: "02-active"
+    label: "Active development"
+    gate_in: "First public release"
+    gate_out: ~
+    recurring: true
+  - id: "03-maintained"
+    label: "Maintenance mode"
+    gate_in: "Active development paused; maintainers committed to bug-fix-only"
+    gate_out: ~
+  - id: "04-archived"
+    label: "Archived"
+    gate_in: "Maintenance ended"
+    gate_out: ~
+    description: "Repository archived; users redirected to forks or successor projects."

@@ -1,0 +1,85 @@
+# grant-canada — reporting matrix defaults
+# Seeded into project-state/reporting-matrix.yaml by project-scaffolder when
+# this pack is loaded on a grant-funded project (post-award execution phase).
+# The pre-award submission phase is tracked in grant-state/, not here.
+
+stakeholder_groups:
+
+  - id: funder.tri-agency
+    label: "Tri-Agency (NSERC / SSHRC / CIHR)"
+    applies_when: "manifest.pack_profiles contains 'tri-council-nserc-alliance' or similar"
+    reports:
+      - id: tri-agency-progress-report
+        skill: project-funder-reporting
+        profile: grant-canada.funder-reporting
+        cadence: annual
+        format: pdf
+        surface: gmail.draft
+        lead_time_days: 21
+
+  - id: funder.irap
+    label: "NRC-IRAP"
+    applies_when: "manifest.funder == 'NRC-IRAP'"
+    reports:
+      - id: irap-claim
+        skill: project-funder-reporting
+        profile: grant-canada.funder-reporting
+        cadence: quarterly
+        format: xlsx
+        surface: gmail.draft
+        lead_time_days: 14
+
+  - id: funder.pic
+    label: "Protein Industries Canada"
+    applies_when: "manifest.funder == 'PIC'"
+    reports:
+      - id: pic-quarterly-claim
+        skill: project-funder-reporting
+        profile: grant-canada.funder-reporting
+        cadence:
+          kind: quarterly
+          due_days_of_year: ["04-20", "07-20", "10-20", "01-20"]
+        format: xlsx
+        surface: gmail.draft
+        lead_time_days: 14
+
+  - id: funder.generic-grant
+    label: "Generic Grant Funder"
+    applies_when: "always (fallback)"
+    reports:
+      - id: grant-progress-report
+        skill: project-funder-reporting
+        profile: grant-canada.funder-reporting
+        cadence: annual
+        format: pdf
+        surface: gmail.draft
+        lead_time_days: 21
+      - id: grant-final-report
+        skill: project-funder-reporting
+        profile: grant-canada.funder-reporting
+        cadence: once
+        trigger: phase.closeout
+        format: pdf
+        surface: gmail.draft
+        lead_time_days: 30
+
+  - id: internal.grant-advisory-committee
+    label: "Grant Advisory Committee"
+    reports:
+      - id: gac-meeting-pack
+        skill: project-review-meeting
+        profile: grant-canada.review-meeting
+        cadence: semi-annual
+        format: pdf
+        surface: gmail.draft
+        lead_time_days: 10
+
+  - id: internal.tto
+    label: "Technology Transfer Office"
+    reports:
+      - id: ip-disclosure
+        skill: project-ip-tracker
+        cadence: event-driven
+        trigger: ip.disclosed
+        format: pdf
+        surface: gmail.draft

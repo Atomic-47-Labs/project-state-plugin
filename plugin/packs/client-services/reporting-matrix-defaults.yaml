@@ -1,0 +1,39 @@
+# Client Services pack — reporting matrix defaults
+
+defaults:
+  - stakeholder_group: customer.{customer_id}
+    report: monthly-customer-invoice
+    cadence: { kind: monthly, day: "last-business-day", lead_time_days: 5 }
+    format: pdf
+    surface: gmail.draft
+    generator: project-funder-reporting
+    profile: client-services.funder-reporting
+
+  - stakeholder_group: customer.{customer_id}
+    report: quarterly-business-review
+    cadence: { kind: quarterly, alignment: "month-after-quarter-end" }
+    format: docx + meeting
+    surface: calendar.invite + gmail.draft
+    generator: project-review-meeting
+    profile: client-services.review-meeting
+
+  - stakeholder_group: customer.{customer_id}
+    report: monthly-status-update
+    cadence: { kind: monthly, day: "first-monday" }
+    format: md
+    surface: gmail.draft
+    generator: project-status-reporter
+
+  - stakeholder_group: customer.{customer_id}
+    report: deliverable-handover
+    cadence: { kind: ad-hoc, on_event: "milestone.completed AND has_customer_deliverable" }
+    format: as-specified-in-milestone
+    surface: gmail.draft + signoff-form
+    generator: project-funder-reporting
+
+  - stakeholder_group: customer.{customer_id}
+    report: change-order-customer-side
+    cadence: { kind: ad-hoc, on_event: "change.proposed AND scope_affects_customer" }
+    format: docx
+    surface: gmail.draft
+    generator: project-change-register

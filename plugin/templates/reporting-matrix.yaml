@@ -1,0 +1,65 @@
+# ============================================================================
+# STAKEHOLDER REPORTING MATRIX — v2.0
+#
+# The first-class entity new in v2.0 that encodes "who needs what, when, in
+# what format, by which surface."
+#
+# The orchestrator scans this matrix on its scheduled tick and dispatches each
+# entry to its named generator at the configured cadence.
+#
+# Seed initial entries by running:
+#     ask claude: "seed reporting matrix from packs"
+# which copies the reporting-matrix-defaults.yaml from each loaded pack.
+#
+# Then customize per project. Stakeholder IDs reference manifest.yaml.
+# ============================================================================
+
+schema_version: 2
+manifest_kind: reporting_matrix
+
+entries:
+
+  # ===== Internal team =====
+
+  - id: monday-tracker-email
+    stakeholder_group: internal.team
+    report: "Monday tracker email"
+    cadence: { kind: weekly, day: monday, lead_time_hours: 8 }
+    format: md
+    surface: gmail.draft + slack
+    generator: project-status-reporter
+    description: |
+      Generated from the previous Friday retrospective. Reviewed by PL, sent Monday morning.
+
+  # ===== From the loaded packs =====
+
+  # Add entries here. Use `ask claude: "seed reporting matrix from packs"`
+  # to auto-populate from each loaded pack's reporting-matrix-defaults.yaml.
+
+# ----------------------------------------------------------------------------
+# Cadence kinds reference
+# ----------------------------------------------------------------------------
+# - weekly: { kind: weekly, day: monday|tuesday|... }
+# - bi-weekly: { kind: bi-weekly, day: friday-odd-week | friday-even-week }
+# - monthly: { kind: monthly, day_of_month: 1 | "last-business-day" | "first-monday" }
+# - quarterly: { kind: quarterly, alignment: "first-month-of-quarter" | days_of_year: [...] }
+# - annual: { kind: annual, due_month: "04" }
+# - sprint-aligned: { kind: sprint-aligned, timing: "last-day-of-sprint" }
+# - ad-hoc: { kind: ad-hoc, on_event: "milestone.completed" }
+# - post-event: { kind: post-event, on: "sc-meeting.held", within_business_days: 5 }
+# - on-publish: { kind: on-publish, trigger: "documents/published/" }
+#
+# All cadences support: lead_time_days, lead_time_hours
+#
+# ----------------------------------------------------------------------------
+# Surface values reference
+# ----------------------------------------------------------------------------
+# - slack
+# - gmail.draft
+# - calendar.invite
+# - calendar.hold
+# - blog
+# - website
+# - github-release | github-discussion (open-source pack)
+#
+# Surfaces can be combined: "calendar.invite + gmail.draft"

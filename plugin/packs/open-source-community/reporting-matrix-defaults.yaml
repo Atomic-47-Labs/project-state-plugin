@@ -1,0 +1,21 @@
+defaults:
+  - stakeholder_group: community
+    report: release-notes
+    cadence: { kind: ad-hoc, on_event: "release.tagged" }
+    format: md
+    surface: github-release + blog + website
+    generator: project-blog-publisher
+
+  - stakeholder_group: contributors
+    report: contributor-digest
+    cadence: { kind: monthly, day: "first-friday" }
+    format: md
+    surface: github-discussion + blog
+    generator: project-status-reporter
+
+  - stakeholder_group: community
+    report: rfc-pipeline-update
+    cadence: { kind: bi-weekly, day: "wednesday" }
+    format: md
+    surface: github-discussion
+    generator: project-status-reporter

@@ -1,0 +1,17 @@
+pack:
+  id: "open-source-community"
+  name: "Open-Source Community Project"
+  version: "0.1.0-starter"
+  compatible_core: ">=2.0,<3.0"
+  description: |
+    Pack for community-governed open-source projects. Configures the suite for
+    RFC/governance pipeline, contributor recognition, public-by-default visibility,
+    sunset/maintenance phase model.
+  authors:
+    - "David Olsson <david@atomic47.co>"
+  released: "2026-04-27"
+  maturity: "starter — minimal scaffold"
+
+provides:
+  profiles: []           # planned for v0.2: external-comms (public-by-default community review), phase-gate (incubation→active→maintained→archived)
+  reporting_matrix_defaults: true

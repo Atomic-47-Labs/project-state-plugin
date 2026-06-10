@@ -1,0 +1,99 @@
+# SR&ED Canada — Reporting Matrix Defaults
+# Seeded into project-state/reporting-matrix.yaml on pack load.
+# CRA is not a project stakeholder — these entries drive internal preparation only.
+
+version: "1.0"
+pack: "sred-canada"
+
+stakeholders:
+  - id: "tax.cra"
+    label: "Canada Revenue Agency (SR&ED)"
+    type: "regulator"
+    note: "Not a project stakeholder. T661 filed with annual T2. All entries below are internal preparation."
+
+  - id: "internal.sred-lead"
+    label: "SR&ED Lead (internal)"
+    type: "internal"
+    note: "Person responsible for SR&ED capture and claim coordination. Often the Project Lead or a designated Finance Rep."
+
+  - id: "external.sred-advisor"
+    label: "SR&ED Consultant / Tax Advisor"
+    type: "external"
+    note: "Qualified SR&ED consultant who reviews and files the T661. Add contact when engaged."
+
+matrix:
+  # ─── Continuous capture ──────────────────────────────────────────────────────
+  - id: "sred.evidence-capture"
+    stakeholder: "internal.sred-lead"
+    report_type: "sred-evidence-capture"
+    cadence: "continuous"
+    trigger: "milestone_completion OR significant_technical_finding"
+    format: "ndjson-entry"
+    surface: "substrate"
+    generator_skill: "project-sred-tracker"
+    description: "Append evidence entries to sred/evidence-log.ndjson at the time of the work. Do not defer to year-end."
+
+  - id: "sred.tu-capture"
+    stakeholder: "internal.sred-lead"
+    report_type: "sred-tu-record"
+    cadence: "on-demand"
+    trigger: "new_technical_uncertainty_identified"
+    format: "yaml"
+    surface: "substrate"
+    generator_skill: "project-sred-tracker"
+    description: "Record a new Technological Uncertainty (TU-NN.yaml) as soon as the knowledge gap is identified — before the work begins."
+
+  # ─── Quarterly review ────────────────────────────────────────────────────────
+  - id: "sred.quarterly-log-review"
+    stakeholder: "internal.sred-lead"
+    report_type: "sred-log-review"
+    cadence: "quarterly"
+    format: "md"
+    surface: "internal"
+    generator_skill: "project-sred-tracker"
+    description: "Quarterly review of evidence log completeness. Flags: TUs with no linked experiments, EXs with no observed result, ADVs not traceable to a TU, milestones with no evidence entries."
+    distribution:
+      - "internal.sred-lead"
+      - "external.sred-advisor"   # optional — share with advisor quarterly if engaged
+
+  # ─── Annual T661 preparation ─────────────────────────────────────────────────
+  - id: "sred.annual-cost-categorization"
+    stakeholder: "internal.sred-lead"
+    report_type: "sred-cost-categorization"
+    cadence: "annual"
+    timing: "Q4 of fiscal year"
+    format: "yaml + md"
+    surface: "internal"
+    generator_skill: "project-funder-reporting"
+    description: "Annual cost categorization worksheet: eligible experimental work vs. partial vs. non-eligible. Feeds into T661 Schedule 1."
+
+  - id: "sred.t661-narrative-draft"
+    stakeholder: "external.sred-advisor"
+    report_type: "t661-narrative"
+    cadence: "annual"
+    timing: "within 15 months of fiscal year-end (3-month buffer before 18-month deadline)"
+    format: "md → docx for advisor handoff"
+    surface: "internal"
+    generator_skill: "project-funder-reporting"
+    description: "Draft T661 Sections E (uncertainties), F (work performed), G (advancements) from sred/ substrate. Route to SR&ED reviewer before advisor handoff."
+    pre_delivery_review: "project-sred-reviewer"
+
+  - id: "sred.t661-review"
+    stakeholder: "internal.sred-lead"
+    report_type: "sred-submission-review"
+    cadence: "annual"
+    timing: "after t661-narrative-draft, before advisor handoff"
+    format: "md"
+    surface: "internal"
+    generator_skill: "project-sred-reviewer"
+    description: "Audit-risk review of T661 draft. CRA-reviewer simulation, cross-section traceability check, cost-framing critique, readiness verdict."
+
+  - id: "sred.advisor-handoff"
+    stakeholder: "external.sred-advisor"
+    report_type: "sred-advisor-package"
+    cadence: "annual"
+    timing: "after review; minimum 60 days before 18-month deadline"
+    format: "docx + yaml"
+    surface: "gmail-draft"
+    generator_skill: "project-funder-reporting"
+    description: "Package for SR&ED advisor: T661 narrative draft, evidence map, cost categorization, evidence-log excerpt. Always a draft — user sends."

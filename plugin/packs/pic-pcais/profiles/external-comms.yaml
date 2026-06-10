@@ -1,0 +1,55 @@
+# PIC PCAIS — external-comms profile
+# Loaded by: project-external-comms skill
+# Purpose: reproduce v1.x project-publications behavior
+
+profile_id: pic-pcais.external-comms
+
+review_windows:
+  full_publication:
+    business_days: 30
+    reviewer: "Steering Committee"
+    description: "MPA-mandated 30-day full publication review"
+  abstract:
+    business_days: 14
+    reviewer: "Steering Committee"
+    description: "MPA-mandated 14-day abstract review"
+  presentation:
+    business_days: 14
+    reviewer: "Steering Committee"
+  press_release:
+    business_days: 14
+    reviewer: "Steering Committee + PIC Communications"
+  blog_public:
+    business_days: 14
+    reviewer: "Steering Committee"
+
+required_acknowledgement:
+  template: |
+    This work was supported by Protein Industries Canada through the {program} program
+    (Global Innovation Cluster co-investment, Government of Canada through Innovation,
+    Science and Economic Development Canada).
+  enforcement: "build-time"   # block deploy/publish if missing
+  variables:
+    program: "PCAIS"
+
+confidentiality_screening:
+  prompts:
+    - "Does this content disclose any unpublished IP that has not yet been filed as a patent?"
+    - "Does this content reveal member-confidential financial figures, contracts, or commercial arrangements?"
+    - "Does this content disclose any third-party data or trade secrets covered by NDA?"
+  on_yes: "block; route to project-ip-tracker for patent-filing-delay coordination if IP-related, or to legal review if confidentiality-related"
+
+patent_filing_delay:
+  enabled: true
+  coordinates_with: project-ip-tracker
+  workflow: |
+    If a proposed publication discloses unfiled IP, project-ip-tracker is consulted.
+    If patent filing is in progress or planned, the publication clock pauses until
+    filing is complete. The PL receives a notification with the expected hold duration.
+
+reviewer_signoffs_required:
+  full_publication:
+    - { role: project_lead, organization: "any consortium member" }
+    - { role: signing_authority, organization: "publishing member" }
+  abstract:
+    - { role: project_lead, organization: "any consortium member" }

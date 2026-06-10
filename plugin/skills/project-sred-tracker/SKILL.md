@@ -1,0 +1,298 @@
+---
+name: project-sred-tracker
+description: "Continuous SR&ED work capture for Canadian T661 claims. Records technological uncertainties (TUs), experiments (EXs), technological advancements (ADVs), and contemporaneous evidence entries into sred/ substrate. Enforces TU→EX→ADV traceability. Runs gap analysis and quarterly completeness reviews. Active when sred-canada pack is loaded. Use whenever the user says 'record a technical uncertainty', 'log SR&ED work', 'add an experiment', 'capture an advancement', 'SR&ED evidence', 'what's our SR&ED status', 'quarterly SR&ED review', 'gap analysis', or any request to track experimental development work for CRA."
+---
+
+# Project SR&ED Tracker
+
+## Purpose
+
+Capture SR&ED-eligible work at the time it happens — not reconstructed at year-end. Every T661 claim is strengthened or weakened by the quality and timing of the underlying records. This skill is the substrate interface for all SR&ED entities in `project-state/sred/`.
+
+The three entity types map directly to T661 sections:
+- **Technological Uncertainties (TU)** → Section E [242]
+- **Experiments / Work Streams (EX)** → Section F [244]
+- **Technological Advancements (ADV)** → Section G [246]
+
+Plus the **evidence log** (`sred/evidence-log.ndjson`) — the contemporaneous record that CRA may request in an audit.
+
+**Design principle:** capture at the time of the work. A TU record created before the experiment is far more defensible than one backdated to match the T661. The evidence log is append-only and timestamped.
+
+## Trigger phrases
+
+- "record a technical uncertainty" / "we have an SR&ED uncertainty"
+- "log SR&ED work" / "capture experiment" / "add a work stream"
+- "we found an advancement" / "record a technological advancement"
+- "SR&ED evidence entry" / "log this work for SR&ED"
+- "what's our SR&ED status" / "quarterly SR&ED review"
+- "SR&ED gap analysis" / "are we ready for the T661"
+- "how much SR&ED work have we captured"
+- Any milestone completion that involved experimental development
+
+## Entity schemas
+
+### Technological Uncertainty — `sred/uncertainties/TU-NN-<slug>.yaml`
+
+```yaml
+schema_version: 1
+entity: "technological_uncertainty"
+id: "TU-01"
+slug: "tenant-isolation-enforcement"
+
+# CRA Section E language
+uncertainty_statement: |
+  It was uncertain whether... [complete statement in CRA-preferred language]
+standard_practice_gap: |
+  No established method was identified for... [why existing tools/knowledge didn't apply]
+
+# Classification
+uncertainty_type: "software_engineering"  # or: materials, process, other
+field_of_science: "2.02.09"               # CRA code
+
+# Traceability
+linked_experiments: []      # EX-NN IDs — populated as experiments are created
+linked_milestones: []       # which project milestones involve this uncertainty
+
+# Timing (critical for CRA)
+identified_date: "YYYY-MM-DD"    # when the uncertainty was first documented — before work began
+work_start_date: "YYYY-MM-DD"    # when experimental work started
+work_end_date: ~                  # when resolved (or null if ongoing)
+fiscal_year: "YYYY"
+
+# Status
+status: "active"    # active | resolved | removed
+resolution: ~       # if resolved: brief statement of how uncertainty was resolved
+
+# Meta
+created_by: "TODO"
+last_modified: "YYYY-MM-DDThh:mm:ssZ"
+```
+
+### Experiment / Work Stream — `sred/experiments/EX-NN-<slug>.yaml`
+
+```yaml
+schema_version: 1
+entity: "experiment"
+id: "EX-01"
+slug: "schema-policy-enforcement-trials"
+
+# CRA Section F language
+linked_tu: "TU-01"
+hypothesis: |
+  Whether [specific technical outcome] could be achieved by [approach] under [constraints].
+method_and_trials: |
+  [Describe what was done: implementations attempted, tests run, architectures tried.
+   Include failures, iterations, and what changed between attempts.]
+observations_and_results: |
+  [What was observed: measured results, failure modes, unexpected constraints,
+   non-obvious findings. If an initial assumption failed, say so explicitly.]
+limitations: |
+  [What remained unresolved or required further work]
+
+# Evidence references (pointers to contemporaneous records)
+evidence_records:
+  - type: "code_commit"         # code_commit | meeting_note | test_output | email | design_doc | other
+    reference: "TODO"           # commit hash, file path, meeting date, etc.
+    date: "YYYY-MM-DD"
+    description: "TODO"
+  - type: "test_output"
+    reference: "TODO"
+    date: "YYYY-MM-DD"
+    description: "TODO"
+
+# Cost allocation basis (for cost-categorization.yaml)
+people_involved:
+  - name: "TODO"
+    role: "TODO"
+    eligible_days: 0    # approximate days of eligible work on this experiment
+
+# Traceability
+linked_advancements: []   # ADV-NN IDs — populated when ADVs are created
+linked_milestones: []
+
+# Timing
+start_date: "YYYY-MM-DD"
+end_date: ~
+fiscal_year: "YYYY"
+
+# Status
+status: "in_progress"  # in_progress | complete | abandoned
+abandonment_reason: ~  # if abandoned: why
+
+# Meta
+created_by: "TODO"
+last_modified: "YYYY-MM-DDThh:mm:ssZ"
+```
+
+### Technological Advancement — `sred/advancements/ADV-NN-<slug>.yaml`
+
+```yaml
+schema_version: 1
+entity: "technological_advancement"
+id: "ADV-01"
+slug: "cross-layer-authorization-knowledge"
+
+# CRA Section G language
+linked_tu: "TU-01"
+linked_experiments: ["EX-01"]
+advancement_statement: |
+  The work established that... [knowledge gained, not product delivered]
+knowledge_gained: |
+  [More detailed description of what is now known that was not known before.
+   Be proportionate: don't claim broader knowledge than the experiments support.]
+
+# Proportionality check (internal — not filed)
+proportionality_note: |
+  [Internal note: does this advancement match the scope of the linked experiment's results?
+   If the experiment was narrow, the advancement should be narrow too.]
+
+# Timing
+established_date: "YYYY-MM-DD"  # when the advancement was achieved / knowledge confirmed
+fiscal_year: "YYYY"
+
+# Meta
+created_by: "TODO"
+last_modified: "YYYY-MM-DDThh:mm:ssZ"
+```
+
+### Evidence Log Entry — appended to `sred/evidence-log.ndjson`
+
+```json
+{
+  "date": "YYYY-MM-DD",
+  "timestamp": "ISO8601",
+  "entry_type": "experiment|test|failure|iteration|advancement|meeting|publication",
+  "tu_id": "TU-01",
+  "ex_id": "EX-01",
+  "adv_id": null,
+  "description": "Brief contemporaneous description of what was done/found",
+  "people": ["Name"],
+  "milestone_id": "M03",
+  "record_type": "code_commit|meeting_note|test_output|email|design_doc",
+  "record_reference": "commit abc123 / path/to/file / meeting YYYY-MM-DD",
+  "logged_by": "name",
+  "logged_at": "ISO8601"
+}
+```
+
+## Operations
+
+### `record_uncertainty(fields)`
+
+Create a new TU-NN record. Required fields:
+- `uncertainty_statement` — in CRA-preferred language ("It was uncertain whether...")
+- `standard_practice_gap` — why existing knowledge didn't resolve it
+- `identified_date` — ideally before experimental work begins
+- `field_of_science` — CRA code
+- `linked_milestones` — which project milestones involve this uncertainty
+
+Enforce: if `identified_date` is after any linked experiment's `start_date`, warn — this is a backdating risk.
+
+### `record_experiment(fields)`
+
+Create a new EX-NN record. Required fields:
+- `linked_tu` — must reference an existing TU-NN
+- `hypothesis` — what was being tested
+- `method_and_trials` — what was done (ask for this if not provided)
+- `observations_and_results` — what was found
+- `evidence_records` — at least one
+
+Enforce: if `observations_and_results` is empty or sounds like pure feature delivery, warn and ask for more detail. The result must include at least one of: failure, limitation, unexpected finding, iteration, refinement.
+
+Automatically append an entry to `sred/evidence-log.ndjson`.
+
+### `record_advancement(fields)`
+
+Create a new ADV-NN record. Required fields:
+- `linked_tu` — must reference an existing TU-NN
+- `linked_experiments` — must include at least one EX-NN
+- `advancement_statement` — in CRA-preferred language ("The work established that...")
+
+Enforce:
+- Advancement must be proportionate to the linked experiments' observed results
+- Language must describe knowledge gained, not product delivered
+- Flag any risky language from the pack profile's `risky_language_patterns` list
+
+### `log_evidence(fields)`
+
+Append one entry to `sred/evidence-log.ndjson`. This is the lightweight daily capture:
+```
+"log SR&ED work on EX-01 today — tested three token-handling approaches, two failed"
+→ append evidence entry with today's date, description, EX-01 link
+```
+
+Minimal required fields: `date`, `tu_id` or `ex_id`, `description`, `people`.
+
+### `gap_analysis()`
+
+Scan all TU/EX/ADV records and evidence log for completeness gaps:
+
+| Check | Risk if failed |
+|-------|---------------|
+| TU with no linked EX | High — uncertainty without investigation |
+| EX with no linked TU | High — work without a declared uncertainty |
+| EX with no evidence_records | High — no contemporaneous records |
+| EX with no observations_and_results | High — no documented outcome |
+| ADV with no linked EX | High — advancement without experimental basis |
+| TU identified after EX start_date | Medium — backdating appearance |
+| EX completed >90 days ago with no ADV | Medium — work without declared knowledge gain |
+| Evidence log entry gap >30 days for active EX | Medium — stale capture |
+| Milestone with experimental description and no linked TU | Medium — potential SR&ED work uncaptured |
+
+Return a prioritized gap list with recommended actions and deadlines.
+
+### `quarterly_review()`
+
+Run `gap_analysis()` and produce a structured quarterly review report:
+1. SR&ED substrate summary: TU count, EX count, ADV count, evidence log entry count
+2. Completeness gaps (from gap_analysis)
+3. Cost allocation status: are people's time entries current?
+4. 18-month deadline status: days remaining per fiscal year
+5. Milestones completed since last review — any experimental work uncaptured?
+6. Recommended actions before next quarter
+
+Save to `reports/adhoc/sred-quarterly-YYYY-QN.md`. Offer to route to SR&ED lead via `project-notifier`.
+
+### `traceability_map()`
+
+Generate the full uncertainty → experiment → advancement chain for a given fiscal year:
+
+```
+TU-01 → EX-01 → ADV-01  ✓ complete
+TU-01 → EX-02 → (no ADV) ⚠ advancement missing
+TU-02 → (no EX) ✗ no experimental work recorded
+```
+
+Used as input to the evidence-map template and T661 narrative generation.
+
+### `milestone_sred_check(milestone_id)`
+
+Called by `project-milestone-manager` on milestone completion. Asks:
+- Does this milestone involve any experimental development?
+- If yes: are TU/EX records current?
+- If no TU exists for this milestone: suggest creating one or confirming SR&ED non-applicability
+
+## Discipline rules
+
+- **Capture at the time of the work.** Evidence entries should reference dates contemporaneous with the actual work — not the date they were entered into the system. If an entry is being back-filled, note the distinction.
+- **Never invent experiments or results.** If the user provides insufficient detail, ask for it. Do not generate hypotheses or observed results that the user didn't provide.
+- **Never imply eligibility certainty.** This skill captures and structures information. Eligibility determinations require a qualified SR&ED consultant. Flag borderline situations clearly.
+- **Enforce the traceability chain.** Every ADV must trace to a TU and an EX. The skill will not create an ADV without both links.
+- **Proportionality.** Advancement claims must match the scope of the experimental evidence. Warn when an advancement sounds broader than what the linked experiments support.
+- **The 18-month deadline is hard.** When it is within 180 days, surface it prominently on every SR&ED interaction.
+
+## Integration
+
+- **project-state** — all writes route through it; TU/EX/ADV are entities like milestones
+- **project-milestone-manager** — calls `milestone_sred_check()` on completion; milestones link to TU/EX records
+- **project-funder-reporting** — consumes TU/EX/ADV entities to generate T661 narrative via sred-canada pack profile
+- **project-sred-reviewer** — receives the T661 draft for audit-risk review before advisor handoff
+- **project-orchestrator** — quarterly review triggered via reporting matrix `sred.quarterly-log-review` entry
+- **project-change-register** — significant scope changes may affect SR&ED eligibility; flag for advisor review
+
+## Reference schema files
+
+- `packs/sred-canada/templates/t661-narrative.md` — narrative template (Sections E/F/G)
+- `packs/sred-canada/templates/evidence-map.md` — evidence map template
+- `packs/sred-canada/templates/cost-categorization.yaml` — cost allocation template
+- `packs/sred-canada/profiles/funder-reporting.yaml` — language guidance and cadence config

@@ -1,0 +1,38 @@
+# Phase 05 — Closeout & Final Reporting
+id: 05-closeout
+label: "Closeout & Final Reporting"
+status: pending
+started: ~
+ended: ~
+
+gate_in:
+  description: "Project end date reached; execution phase complete"
+  evidence: []
+
+gate_out:
+  description: "Final reports accepted by PIC; holdback released"
+  checklist:
+    - id: closeout.final_reports_drafted
+      label: "Final report per Consortium member (PIC template) — drafted ~90 days pre-close"
+      done: false
+    - id: closeout.ip_final_reporting
+      label: "IP final reporting + abstracts confirmed on PIC Registry"
+      done: false
+    - id: closeout.fte_confirmed
+      label: "FTE confirmation submitted per member"
+      done: false
+    - id: closeout.financial_reconciliation
+      label: "Final financial reconciliation complete"
+      done: false
+    - id: closeout.lessons_learned_summary
+      label: "Consolidated Consortium Lessons Learned summary"
+      done: false
+    - id: closeout.final_reports_submitted
+      label: "Final reports submitted to PIC (30 days post-close)"
+      done: false
+    - id: closeout.pic_acceptance
+      label: "PIC acceptance of final reports"
+      done: false
+    - id: closeout.holdback_released
+      label: "Holdback released to consortium members"
+      done: false

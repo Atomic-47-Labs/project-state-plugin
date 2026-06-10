@@ -1,0 +1,42 @@
+profile_id: board-investor.review-meeting
+
+meeting:
+  name: "Board Meeting"
+  short_id_prefix: "BM"
+  cadence:
+    kind: monthly   # or "bi-monthly", "quarterly"
+    alignment: "second-tuesday"
+  notice_minimum_days: 7
+  lookahead_months: 6
+  minutes_distribution_max_days: 5
+  duration_minutes: 90
+
+attendees:
+  required:
+    - id: ceo
+    - id: board_members
+  optional:
+    - id: cfo
+    - id: legal_counsel
+    - id: investor_observers
+
+agenda:
+  template: "templates/board-pack.md"
+  required_sections:
+    - "CEO update (5-min cold open)"
+    - "Financial summary (cash, runway, MRR/ARR)"
+    - "KPI dashboard"
+    - "Operating updates (engineering, sales, ops)"
+    - "Board approvals required (if any)"
+    - "Strategic discussion topic"
+    - "Executive session"
+
+preread_pack:
+  assembly:
+    - status-reporter.executive-snapshot
+    - finance.cash-and-runway
+    - kpi-dashboard.current-snapshot
+    - milestones.completed-this-period
+    - milestones.upcoming
+  output: "reports/board/{bm-id}-pack.docx"
+  distribution_lead_days: 3   # board members like time to read

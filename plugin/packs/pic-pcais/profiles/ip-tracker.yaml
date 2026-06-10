@@ -1,0 +1,51 @@
+# PIC PCAIS — ip-tracker profile
+# Loaded by: project-ip-tracker skill
+
+profile_id: pic-pcais.ip-tracker
+
+disclosure:
+  recipient_role: "PIC Director of Data and Intellectual Property"
+  recipient_contact: "{funder.pic.contacts.director_ip}"
+  delivery_surface: gmail.draft
+  template: "templates/ip-disclosure.md"
+  routing: "as IP arises, not on a cadence"
+
+definitions:
+  foreground_ip: |
+    Intellectual property created during the course of the project, in whole or in part
+    using PIC funding. Default ownership: jointly held by contributing consortium members
+    per MPA Schedule.
+  background_ip: |
+    Intellectual property owned by a consortium member prior to the project start, or
+    created independent of project funding. Members retain ownership; granted licenses
+    to the consortium per MPA terms.
+
+ip_registry:
+  abstract_format: "templates/pic-ip-registry-abstract.md"
+  submission_cadence: "as foreground IP is recognized; reviewed annually"
+  fields_required:
+    - title
+    - inventors
+    - background_ip_dependencies
+    - foreground_ip_summary
+    - commercialization_intent
+    - licensing_status
+    - patent_status
+
+annual_questionnaire:
+  ip_section_template: "templates/pic-annual-questionnaire-ip-section.md"
+  inputs_drawn_from:
+    - "ip/disclosures/*.yaml"
+    - "ip/rationale.md"
+    - "ip/licenses-granted.yaml"
+    - "ip/licenses-received.yaml"
+    - "ip/commercialization-status.yaml"
+
+commercialization_reporting:
+  cadence: "annual; ad-hoc on material events"
+  events_triggering_ad_hoc:
+    - "license granted to third party"
+    - "license received from third party"
+    - "patent filed"
+    - "spinout incorporated"
+    - "first commercial sale"

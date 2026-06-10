@@ -1,0 +1,56 @@
+# Client Services — funder-reporting profile (customer = "funder" role)
+# Loaded by: project-funder-reporting skill
+
+profile_id: client-services.funder-reporting
+stakeholder_group: customer.{customer_id}    # parameterized; replace at load time
+
+reports:
+  - id: monthly-customer-invoice
+    name: "Monthly Customer Invoice"
+    description: |
+      Milestone-based or T&M-based invoice generated at month-end. Reads completed
+      milestone entries with billing_amount fields, plus any T&M time entries
+      from the period.
+    cadence:
+      kind: monthly
+      day_of_month: "last-business-day"
+      coverage_window: "previous month"
+      lead_time_days: 5
+    format:
+      kind: pdf
+      template: "templates/invoice.html"   # rendered via wkhtmltopdf or similar
+      output_naming: "reports/customer.{customer_id}/invoices/{YYYY}-{MM}-invoice.pdf"
+    field_mapping:
+      milestones_billed:
+        source: "milestones/*.yaml"
+        filter: "billed_in_period == this period AND billing_amount > 0"
+        fields:
+          - { from: "id", to: "Line_Item_ID" }
+          - { from: "title", to: "Line_Item_Description" }
+          - { from: "billing_amount", to: "Line_Item_Amount" }
+      time_and_materials:
+        source: "communications/finance/time-entries-{YYYY}-{MM}.yaml"
+        per_engineer: true
+    cover_delivery:
+      surface: gmail.draft
+      to: "{customer.{customer_id}.contacts.billing}"
+      cc: ["{customer.{customer_id}.contacts.engagement_lead}"]
+      template: "templates/invoice-cover-email.md"
+      subject: "{project.short_name} — Invoice {YYYY}-{MM}"
+    signoff_required:
+      - role: project_lead
+      - role: finance_representative
+
+  - id: quarterly-business-review
+    name: "QBR Pack"
+    description: "Quarterly Business Review pack delivered to customer ahead of QBR meeting"
+    cadence:
+      kind: quarterly
+      lead_time_days: 7
+    format:
+      kind: docx
+      template: "templates/qbr-pack.md"
+    cover_delivery:
+      surface: gmail.draft + calendar.invite
+
+monthly_close_alignment: true

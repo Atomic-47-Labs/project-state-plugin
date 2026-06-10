@@ -1,0 +1,11 @@
+# Phase 01 — Letter of Intent
+id: 01-loi
+label: "Letter of Intent"
+status: complete    # not_started | current | complete
+started: ~
+ended: ~
+gate_in: {description: "Project conceived"}
+gate_out:
+  description: "LOI accepted by PIC; invited to submit full proposal"
+  evidence: []
+notes: "Reconstruct from records when convenient; this phase is already closed by the time scaffolding happens."
