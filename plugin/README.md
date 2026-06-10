@@ -9,8 +9,8 @@ compliance, and a local kanban dashboard. Behavior is configured by swappable
 ## Install
 
 ```
-/plugin marketplace add Atomic-47-Labs/project-state
-/plugin install project-state@project-state
+/plugin marketplace add Atomic-47-Labs/project-state-plugin
+/plugin install project-state@project-state-plugin
 ```
 
 Then start a project:
