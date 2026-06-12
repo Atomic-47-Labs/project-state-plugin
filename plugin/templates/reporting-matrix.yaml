@@ -28,8 +28,53 @@ entries:
     format: md
     surface: gmail.draft + slack
     generator: project-status-reporter
+    enabled: true
+    # automation:                         # optional per-entry overrides for project-automator
+    #   priority: high                    # high | normal | low  (slot ordering within window)
+    #   window_override: "23:30-01:00"   # override global window for this entry only
     description: |
       Generated from the previous Friday retrospective. Reviewed by PL, sent Monday morning.
+
+  # ===== Achievement-triggered examples =====
+  # These use event-driven cadence kinds. project-automator compiles them into
+  # event-hook definitions (not crons) in automation/schedule.yaml.
+  # The host (keep-state) fires these when the named event occurs in state.json.
+
+  # - id: milestone-completion-report
+  #   stakeholder_group: internal.team
+  #   report: "Milestone completion summary"
+  #   cadence: { kind: ad-hoc, on_event: "milestone.completed" }
+  #   format: md
+  #   surface: slack
+  #   generator: project-status-reporter
+  #   enabled: true
+
+  # - id: phase-transition-baseline
+  #   stakeholder_group: internal.team
+  #   report: "Phase transition baseline bundle"
+  #   cadence: { kind: ad-hoc, on_event: "phase.transition" }
+  #   format: docx+xlsx
+  #   surface: website
+  #   generator: project-doc-suite
+  #   enabled: true
+
+  # - id: post-sc-meeting-minutes
+  #   stakeholder_group: funder.pic
+  #   report: "SC meeting minutes"
+  #   cadence: { kind: post-event, on: "sc-meeting.held", within_business_days: 3 }
+  #   format: md
+  #   surface: gmail.draft
+  #   generator: project-review-meeting
+  #   enabled: true
+
+  # - id: on-publish-blog-notify
+  #   stakeholder_group: internal.team
+  #   report: "Blog publish notification"
+  #   cadence: { kind: on-publish, trigger: "documents/published/" }
+  #   format: md
+  #   surface: slack
+  #   generator: project-blog-publisher
+  #   enabled: true
 
   # ===== From the loaded packs =====
 

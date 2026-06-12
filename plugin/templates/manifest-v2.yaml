@@ -127,6 +127,23 @@ surfaces:
 #       engagement_lead: ~
 
 # ----------------------------------------------------------------------------
+# Automation — compiled by project-automator into automation/schedule.yaml
+#
+# The reporting matrix is the source of truth for WHAT runs. This block
+# configures WHERE and WHEN jobs are allowed to run. project-automator
+# reads these settings when compiling the schedule.
+# ----------------------------------------------------------------------------
+
+automation:
+  enabled: true                          # master switch; false → all emitted jobs disabled
+  window:
+    start: "23:00"                       # earliest start time for cron jobs (local tz)
+    end:   "05:00"                       # latest finish time (next-day if end < start)
+  timezone: ~                            # IANA tz string, e.g. "America/Vancouver" — REQUIRED
+  # on_change: regenerate               # future: auto-recompile when matrix changes
+  # schedule_path: "automation/schedule.yaml"   # default output path
+
+# ----------------------------------------------------------------------------
 # Concurrency model (unchanged from v1.x)
 # ----------------------------------------------------------------------------
 
